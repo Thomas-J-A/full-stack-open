@@ -1,16 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from "axios";
 
 import Filter from './components/Filter';
 import AddEntry from './components/AddEntry';
 import Persons from './components/Persons';
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '07228946744' }
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [query, setQuery] = useState('');
+
+  // Fetch initial data
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then((res) => {
+        setPersons(res.data);
+      });
+  }, []);
 
   const addPerson = (e) => {
     e.preventDefault();
