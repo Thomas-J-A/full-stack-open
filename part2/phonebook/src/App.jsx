@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import axios from "axios";
 
 import Filter from './components/Filter';
 import AddEntry from './components/AddEntry';
 import Persons from './components/Persons';
+
+import personService from './services/person.service';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -13,36 +14,74 @@ const App = () => {
 
   // Fetch initial data
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then((res) => {
         setPersons(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   }, []);
 
   const addPerson = (e) => {
     e.preventDefault();
 
-    // Check if the user is attempting to add a person
-    // who already exists in the phonebook
-    const alreadyExistsUser = persons.some(
-      (person) => person.name === newName
-    );
-
-    if (alreadyExistsUser) {
-      alert(`${newName} is already in the phonebook, pal.`);
-      return;
-    }
-
-    // Add new person to persons list, reset input value
     const newPerson = {
       name: newName,
       number: newNumber,
     };
 
-    setPersons([...persons, newPerson]);
+    // Check if the user is attempting to add a person
+    // who already exists in the phonebook
+    const existingUser = persons.find((p) => p.name === newName);
+
+    if (existingUser) {
+      // Update person if confirmed
+      const isConfirmed = confirm(`${ newName } is already in the phonebook. Replace the old number with a new one?`);
+
+      if (isConfirmed) {
+        personService
+          .update(existingUser.id, newPerson)
+          .then((res) => {
+            const updatedPersons = persons.map((p) => p.id !== existingUser.id ? p : res.data);
+            setPersons(updatedPersons);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    } else {
+      // Add new person
+      personService
+        .create(newPerson)
+        .then((res) => {
+          setPersons([...persons, res.data]);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    // In any case, reset field values
     setNewName('');
     setNewNumber('');
+  };
+
+  const removePerson = (id) => {
+    const person = persons.find((p) => p.id === id);
+    const isConfirmed = confirm(`Delete ${ person.name }?`);
+
+    if (isConfirmed) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter((p) => p.id !== id));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const handleChangeName = (e) => setNewName(e.target.value);
@@ -68,7 +107,7 @@ const App = () => {
         handleChangeNumber={handleChangeNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} removePerson={removePerson} />
     </div>
   );
 };
