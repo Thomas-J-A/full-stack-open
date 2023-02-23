@@ -3,14 +3,20 @@ import { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import AddEntry from './components/AddEntry';
 import Persons from './components/Persons';
+import Notification from './components/Notification';
+import Error from './components/Error';
 
 import personService from './services/person.service';
+
+import './index.css';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [query, setQuery] = useState('');
+  const [notificationMsg, setNotificationMsg] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   // Fetch initial data
   useEffect(() => {
@@ -37,18 +43,26 @@ const App = () => {
     const existingUser = persons.find((p) => p.name === newName);
 
     if (existingUser) {
-      // Update person if confirmed
       const isConfirmed = confirm(`${ newName } is already in the phonebook. Replace the old number with a new one?`);
-
+      
       if (isConfirmed) {
+        // Update person
         personService
           .update(existingUser.id, newPerson)
           .then((res) => {
             const updatedPersons = persons.map((p) => p.id !== existingUser.id ? p : res.data);
             setPersons(updatedPersons);
+            setNotificationMsg(`Updated ${ newName }'s number.`);
+            setTimeout(() => (
+              setNotificationMsg(null)
+            ), 5000);
           })
-          .catch((err) => {
-            console.log(err);
+          .catch(() => {
+            setPersons(persons.filter((p) => p.id !== existingUser.id));
+            setErrorMsg(`Information regarding ${ newName } has already been removed from the server.`);
+            setTimeout(() => (
+              setErrorMsg(null)
+            ), 5000);
           });
       }
     } else {
@@ -57,6 +71,10 @@ const App = () => {
         .create(newPerson)
         .then((res) => {
           setPersons([...persons, res.data]);
+          setNotificationMsg(`Added ${ newName } to the phonebook.`);
+          setTimeout(() => (
+            setNotificationMsg(null)
+          ), 5000);
         })
         .catch((err) => {
           console.log(err);
@@ -96,6 +114,8 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={notificationMsg} />
+      <Error message={errorMsg} />
       <h2>Filter Entries</h2>
       <Filter query={query} handleChangeQuery={handleChangeQuery} />
       <h2>Add New Entry</h2>
