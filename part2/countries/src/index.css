@@ -1,13 +1,13 @@
 th {
-	text-align: right;
+  text-align: right;
 }
 
 .countryFlag {
-	height: 80px;
-	width: auto;
+  height: 80px;
+  width: auto;
 }
 
 .error {
-	color: red;
-	font-size: 14px;
+  color: red;
+  font-size: 14px;
 }
