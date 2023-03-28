@@ -10,7 +10,7 @@ const AddEntry = ({
       Name: <input value={newName} onChange={handleChangeName} />
     </div>
     <div>
-      Number: <input type="number" value={newNumber} onChange={handleChangeNumber} />
+      Number: <input value={newNumber} onChange={handleChangeNumber} />
     </div>
     <div>
       <button type="submit">add</button>

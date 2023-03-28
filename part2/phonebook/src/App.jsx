@@ -57,12 +57,21 @@ const App = () => {
               setNotificationMsg(null)
             ), 5000);
           })
-          .catch(() => {
-            setPersons(persons.filter((p) => p.id !== existingUser.id));
-            setErrorMsg(`Information regarding ${ newName } has already been removed from the server.`);
-            setTimeout(() => (
-              setErrorMsg(null)
-            ), 5000);
+          .catch((err) => {
+            // if (err.response.status === 400) {
+            //   // Number is invalid
+            //   setErrorMsg(err.response.data.error);
+            //   setTimeout(() => (
+            //     setErrorMsg(null)
+            //   ), 5000);
+            // } else {
+              // Entry not found on server
+              setPersons(persons.filter((p) => p.id !== existingUser.id));
+              setErrorMsg(`Information regarding ${ newName } has already been removed from the server.`);
+              setTimeout(() => (
+                setErrorMsg(null)
+              ), 5000);
+            // }
           });
       }
     } else {
@@ -77,7 +86,10 @@ const App = () => {
           ), 5000);
         })
         .catch((err) => {
-          console.log(err);
+          setErrorMsg(err.response.data.error);
+          setTimeout(() => (
+            setErrorMsg(null)
+          ), 5000);
         });
     }
 
