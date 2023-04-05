@@ -1,6 +1,6 @@
 const { blogService } = require('../services');
 
-exports.fetchBloglist = async (req, res, next) => {
+const fetchBloglist = async (req, res, next) => {
   try {
     const blogs = await blogService.fetchBloglist();
     res.status(200).json(blogs);
@@ -9,7 +9,7 @@ exports.fetchBloglist = async (req, res, next) => {
   }
 };
 
-exports.addEntry = async (req, res, next) => {
+const addEntry = async (req, res, next) => {
   const { body } = req;
 
   try {
@@ -18,4 +18,9 @@ exports.addEntry = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+module.exports = {
+  fetchBloglist,
+  addEntry,
 };

@@ -1,14 +1,19 @@
 const { Blog } = require('../models');
 
-exports.fetchBloglist = async () => {
+const fetchBloglist = async () => {
   const blogs = await Blog.find({}).exec();
   return blogs;
 };
 
-exports.addEntry = async (fields) => {
+const addEntry = async (fields) => {
   const blog = new Blog(fields);
   const savedBlog = await blog.save();
   return savedBlog;
+};
+
+module.exports = {
+  fetchBloglist,
+  addEntry,
 };
 
 // throw new NotFoundError if blogs.length === 0;

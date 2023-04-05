@@ -1,5 +1,5 @@
-const { AppError } = require('../utils/errors');
-const { ERROR_CODES } = require('../utils/constants');
+const { AppError } = require('../lib/errors');
+const { ERROR_CODES } = require('../data/constants');
 
 const handleError = (err, req, res, next) => {
   if (err.name === 'CastError') {
