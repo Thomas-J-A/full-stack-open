@@ -17,11 +17,13 @@ const blogSchema = new Schema({
   },
   likes: {
     type: Number,
+    default: 0,
     required: true,
   },
 });
 
 // Transform data when converted to JSON
+/* eslint-disable no-param-reassign */
 blogSchema.set('toJSON', {
   transform: (doc, ret) => {
     ret.id = ret._id.toString();

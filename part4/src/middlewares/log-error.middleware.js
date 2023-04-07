@@ -1,7 +1,9 @@
 const { logger } = require('../utils');
 
 const logError = (err, req, res, next) => {
-  logger.error('Error:', err.stack);
+  if (process.env.NODE_ENV !== 'test') {
+    logger.error('Error:', err.stack);
+  }
 
   next(err);
 };
