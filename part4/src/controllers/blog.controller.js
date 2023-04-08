@@ -20,7 +20,31 @@ const addEntry = async (req, res, next) => {
   }
 };
 
+const updateLikes = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const updatedBlog = await blogService.updateLikes(id);
+    res.status(200).json(updatedBlog);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const removeEntry = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    await blogService.removeEntry(id);
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   fetchBloglist,
   addEntry,
+  updateLikes,
+  removeEntry,
 };

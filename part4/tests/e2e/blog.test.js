@@ -1,4 +1,5 @@
 const supertest = require('supertest');
+const mongoose = require('mongoose');
 const { faker } = require('@faker-js/faker');
 
 const app = require('../../app');
@@ -138,5 +139,85 @@ describe('POST /api/blogs', () => {
 
     expect(res.statusCode).toBe(400);
     expect(res.body.code).toBe('VALIDATION_FAILURE');
+  });
+});
+
+describe('PUT /api/blogs/:id', () => {
+  it('should update number of likes', async () => {
+    const blog = await seedBlog({ likes: 50 });
+
+    const res = await api
+      .put(`/api/blogs/${blog._id}`);
+
+    expect(res.statusCode).toBe(200);
+
+    const blogs = await api
+      .get('/api/blogs');
+
+    expect(blogs.body[0].likes).toBe(51);
+  });
+
+  it('should return 404 if blog doesn\'t exist', async () => {
+    const fakeId = new mongoose.Types.ObjectId().toString();
+
+    const res = await api
+      .put(`/api/blogs/${fakeId}`);
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body.code).toBe('RESOURCE_NOT_FOUND');
+  });
+
+  it('should return 400 if \'id\' is invalid', async () => {
+    const invalidId = getRandomNumber(1000);
+
+    const res = await api
+      .put(`/api/blogs/${invalidId}`);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.code).toBe('CASTING_FAILURE');
+  });
+});
+
+describe('DELETE /api/blogs/:id', () => {
+  it('should return 204', async () => {
+    const blog = await seedBlog();
+
+    const res = await api
+      .delete(`/api/blogs/${blog._id}`);
+
+    expect(res.statusCode).toBe(204);
+  });
+
+  it('should remove blog from database', async () => {
+    const blog = await seedBlog();
+
+    const res = await api
+      .delete(`/api/blogs/${blog._id}`);
+
+    expect(res.statusCode).toBe(204);
+
+    const blogs = await api
+      .get('/api/blogs');
+
+    expect(blogs.body).toHaveLength(0);
+  });
+
+  it('should return 204 if blog doesn\'t exist', async () => {
+    const fakeId = new mongoose.Types.ObjectId().toString();
+
+    const res = await api
+      .delete(`/api/blogs/${fakeId}`);
+
+    expect(res.statusCode).toBe(204);
+  });
+
+  it('should return 400 if \'id\' is invalid', async () => {
+    const invalidId = getRandomNumber(1000);
+
+    const res = await api
+      .delete(`/api/blogs/${invalidId}`);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.code).toBe('CASTING_FAILURE');
   });
 });

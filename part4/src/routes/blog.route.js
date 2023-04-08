@@ -8,4 +8,8 @@ router.get('/', blogController.fetchBloglist);
 
 router.post('/', blogController.addEntry);
 
+router.put('/:id', blogController.updateLikes);
+
+router.delete('/:id', blogController.removeEntry);
+
 module.exports = router;
