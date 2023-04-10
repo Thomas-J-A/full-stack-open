@@ -1,15 +1,34 @@
-const { Blog } = require('../models');
+const { Blog, User } = require('../models');
 const { NotFoundError } = require('../lib/errors');
 const { ERROR_CODES } = require('../data/constants');
 
 const fetchBloglist = async () => {
-  const blogs = await Blog.find({}).exec();
+  const blogs = await Blog
+    .find({})
+    .populate('user', 'username name')
+    .exec();
   return blogs;
 };
 
-const addEntry = async (fields) => {
-  const blog = new Blog(fields);
+const addEntry = async ({
+  title, author, url, likes,
+}) => {
+  const user = await User.findOne({}).exec();
+
+  const blog = new Blog({
+    title,
+    author,
+    url,
+    likes,
+    user: user._id,
+  });
+
   const savedBlog = await blog.save();
+
+  // Add blog to user document
+  user.blogs = [...user.blogs, savedBlog._id];
+  await user.save();
+
   return savedBlog;
 };
 

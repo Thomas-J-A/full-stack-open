@@ -3,7 +3,10 @@ const { ERROR_CODES } = require('../data/constants');
 const { User } = require('../models');
 
 const fetchUsers = async () => {
-  const users = await User.find({}).exec();
+  const users = await User
+    .find({})
+    .populate('blogs', 'url title author')
+    .exec();
   return users;
 };
 

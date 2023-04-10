@@ -20,6 +20,10 @@ const blogSchema = new Schema({
     default: 0,
     required: true,
   },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
 });
 
 // Transform data when converted to JSON

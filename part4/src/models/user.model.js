@@ -7,6 +7,10 @@ const userSchema = new Schema({
   username: String,
   name: String,
   password: String,
+  blogs: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Blog',
+  }],
 });
 
 /* eslint-disable no-param-reassign */
