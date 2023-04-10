@@ -5,9 +5,6 @@ const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
 
-const indexRouter = require('./src/routes');
-const middlewares = require('./src/middlewares');
-
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
@@ -17,6 +14,9 @@ if (process.env.NODE_ENV !== 'production') {
 if (process.env.NODE_ENV !== 'test') {
   require('./src/configs/db.config');
 }
+
+const indexRouter = require('./src/routes');
+const middlewares = require('./src/middlewares');
 
 const app = express();
 

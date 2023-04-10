@@ -15,27 +15,9 @@ class NotFoundError extends AppError {
 module.exports = NotFoundError;
 
 // {
-//   name: 'NotFoundError',
-//   statusCode: 404,
-//   code: 'USER_NOT_FOUND',
-//   message: 'No username was found matching Peter22'
-//   stack: ...,
-// }
-
-// {
 //   name: 'BadRequestError',
 //   statusCode: 400,
 //   code: 'FIELD_MISSING',
 //   message: 'Username field is required',
 //   stack: ...,
 // }
-
-// {
-//   name: 'ConflictError',
-//   statusCode: 409,
-//   code: 'USERNAME_TAKEN',
-//   message: 'Username <username> already exists',
-//   stack: ...,
-// }
-
-// throw new ConflictError(`Username ${username} already exists`, USERNAME_TAKEN);

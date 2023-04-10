@@ -1,9 +1,11 @@
-const { PORT } = process.env;
-const { MONGODB_URI } = process.env;
-// const { NODE_ENV } = process.env;
+const {
+  PORT,
+  MONGODB_URI,
+  ACCESS_TOKEN_SECRET,
+} = process.env;
 
 module.exports = {
   PORT,
   MONGODB_URI,
-  // NODE_ENV,
+  ACCESS_TOKEN_SECRET,
 };
