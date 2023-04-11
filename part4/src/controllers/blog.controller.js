@@ -10,10 +10,10 @@ const fetchBloglist = async (req, res, next) => {
 };
 
 const addEntry = async (req, res, next) => {
-  const { body, token } = req;
+  const { body, user } = req;
 
   try {
-    const newBlog = await blogService.addEntry(body, token);
+    const newBlog = await blogService.addEntry(body, user);
     res.status(201).json(newBlog);
   } catch (err) {
     next(err);
@@ -32,11 +32,11 @@ const updateLikes = async (req, res, next) => {
 };
 
 const removeEntry = async (req, res, next) => {
-  const { token } = req;
+  const { user } = req;
   const { id } = req.params;
 
   try {
-    await blogService.removeEntry(token, id);
+    await blogService.removeEntry(user, id);
     res.status(204).end();
   } catch (err) {
     next(err);

@@ -1,11 +1,7 @@
-const jwt = require('jsonwebtoken');
-
-const env = require('../configs/env.config');
-const { Blog, User } = require('../models');
+const { Blog } = require('../models');
 const {
   ForbiddenError,
   NotFoundError,
-  UnauthorizedError
 } = require('../lib/errors');
 const { ERROR_CODES } = require('../data/constants');
 
@@ -19,18 +15,7 @@ const fetchBloglist = async () => {
 
 const addEntry = async ({
   title, author, url, likes,
-}, token) => {
-  const payload = jwt.verify(token, env.AUTH_TOKEN_SECRET);
-
-  if (!payload.sub) {
-    throw new UnauthorizedError(
-      ERROR_CODES.AUTH_TOKEN_MISSING_CLAIM,
-      'Auth token requires the sub claim',
-    );
-  }
-
-  const user = await User.findById(payload.sub).exec();
-
+}, user) => {
   const blog = new Blog({
     title,
     author,
@@ -39,6 +24,7 @@ const addEntry = async ({
     user: user._id,
   });
 
+  // Save new blog document
   const savedBlog = await blog.save();
 
   // Add blog to user document
@@ -65,17 +51,7 @@ const updateLikes = async (id) => {
   return updatedBlog;
 };
 
-const removeEntry = async (token, id) => {
-  const payload = jwt.verify(token, env.AUTH_TOKEN_SECRET);
-
-  if (!payload.sub) {
-    throw new UnauthorizedError(
-      ERROR_CODES.AUTH_TOKEN_MISSING_CLAIM,
-      'Auth token requires the sub claim',
-    );
-  }
-
-  const user = await User.findById(payload.sub).exec();
+const removeEntry = async (user, id) => {
   const blog = await Blog.findById(id).exec();
 
   if (!blog.user.equals(user._id)) {
@@ -85,7 +61,12 @@ const removeEntry = async (token, id) => {
     );
   }
 
+  // Remove blog from collection
   await Blog.findByIdAndRemove(id).exec();
+
+  // Remove blog reference in user document
+  user.blogs = user.blogs.filter((blogRef) => !blogRef.equals(id));
+  await user.save();
 };
 
 module.exports = {
