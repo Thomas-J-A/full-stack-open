@@ -76,7 +76,6 @@ const removeEntry = async (token, id) => {
   }
 
   const user = await User.findById(payload.sub).exec();
-
   const blog = await Blog.findById(id).exec();
 
   if (!blog.user.equals(user._id)) {
