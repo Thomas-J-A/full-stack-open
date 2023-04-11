@@ -1,5 +1,8 @@
+const jwt = require('jsonwebtoken');
+
+const env = require('../configs/env.config');
 const { Blog, User } = require('../models');
-const { NotFoundError } = require('../lib/errors');
+const { NotFoundError, UnauthorizedError } = require('../lib/errors');
 const { ERROR_CODES } = require('../data/constants');
 
 const fetchBloglist = async () => {
@@ -12,8 +15,17 @@ const fetchBloglist = async () => {
 
 const addEntry = async ({
   title, author, url, likes,
-}) => {
-  const user = await User.findOne({}).exec();
+}, token) => {
+  const payload = jwt.verify(token, env.AUTH_TOKEN_SECRET);
+
+  if (!payload.sub) {
+    throw new UnauthorizedError(
+      ERROR_CODES.AUTH_TOKEN_MISSING_CLAIM,
+      'Auth token requires the sub claim',
+    );
+  }
+
+  const user = await User.findById(payload.sub).exec();
 
   const blog = new Blog({
     title,

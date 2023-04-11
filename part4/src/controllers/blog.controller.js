@@ -10,10 +10,10 @@ const fetchBloglist = async (req, res, next) => {
 };
 
 const addEntry = async (req, res, next) => {
-  const { body } = req;
+  const { body, token } = req;
 
   try {
-    const newBlog = await blogService.addEntry(body);
+    const newBlog = await blogService.addEntry(body, token);
     res.status(201).json(newBlog);
   } catch (err) {
     next(err);

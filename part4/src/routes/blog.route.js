@@ -1,12 +1,17 @@
 const express = require('express');
 
 const { blogController } = require('../controllers');
+const { extractToken } = require('../middlewares');
 
 const router = express.Router();
 
 router.get('/', blogController.fetchBloglist);
 
-router.post('/', blogController.addEntry);
+router.post(
+  '/',
+  extractToken,
+  blogController.addEntry,
+);
 
 router.put('/:id', blogController.updateLikes);
 
