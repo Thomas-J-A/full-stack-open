@@ -32,10 +32,11 @@ const updateLikes = async (req, res, next) => {
 };
 
 const removeEntry = async (req, res, next) => {
+  const { token } = req;
   const { id } = req.params;
 
   try {
-    await blogService.removeEntry(id);
+    await blogService.removeEntry(token, id);
     res.status(204).end();
   } catch (err) {
     next(err);

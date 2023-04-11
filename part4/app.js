@@ -16,7 +16,11 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 const indexRouter = require('./src/routes');
-const middlewares = require('./src/middlewares');
+const {
+  handleNotFound,
+  logError,
+  handleError,
+} = require('./src/middlewares');
 
 const app = express();
 
@@ -35,9 +39,9 @@ app.use(express.json());
 
 app.use('/api', indexRouter);
 
-app.use(middlewares.notFound);
-app.use(middlewares.logError);
-app.use(middlewares.handleError);
+app.use(handleNotFound);
+app.use(logError);
+app.use(handleError);
 // Handle unhandled rejections and uncaught exceptions
 // process.on('uncaughtException') || process.on('unhandledRejection')
 

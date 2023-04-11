@@ -2,7 +2,11 @@ const jwt = require('jsonwebtoken');
 
 const env = require('../configs/env.config');
 const { Blog, User } = require('../models');
-const { NotFoundError, UnauthorizedError } = require('../lib/errors');
+const {
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError
+} = require('../lib/errors');
 const { ERROR_CODES } = require('../data/constants');
 
 const fetchBloglist = async () => {
@@ -61,7 +65,27 @@ const updateLikes = async (id) => {
   return updatedBlog;
 };
 
-const removeEntry = async (id) => {
+const removeEntry = async (token, id) => {
+  const payload = jwt.verify(token, env.AUTH_TOKEN_SECRET);
+
+  if (!payload.sub) {
+    throw new UnauthorizedError(
+      ERROR_CODES.AUTH_TOKEN_MISSING_CLAIM,
+      'Auth token requires the sub claim',
+    );
+  }
+
+  const user = await User.findById(payload.sub).exec();
+
+  const blog = await Blog.findById(id).exec();
+
+  if (!blog.user.equals(user._id)) {
+    throw new ForbiddenError(
+      ERROR_CODES.NOT_AUTHORIZED,
+      'Only the creater of this blog may delete it',
+    );
+  }
+
   await Blog.findByIdAndRemove(id).exec();
 };
 

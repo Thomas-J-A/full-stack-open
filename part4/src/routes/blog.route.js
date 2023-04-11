@@ -15,6 +15,10 @@ router.post(
 
 router.put('/:id', blogController.updateLikes);
 
-router.delete('/:id', blogController.removeEntry);
+router.delete(
+  '/:id',
+  extractToken,
+  blogController.removeEntry,
+);
 
 module.exports = router;
