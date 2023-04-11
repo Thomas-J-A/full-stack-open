@@ -17,5 +17,6 @@ module.exports = {
     'no-console': 'off',
     'consistent-return': 'off',
     'no-useless-catch': 'off',
+    'no-param-reassign': 'off',
   },
 };
