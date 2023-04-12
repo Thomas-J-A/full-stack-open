@@ -54,6 +54,13 @@ const updateLikes = async (id) => {
 const removeEntry = async (user, id) => {
   const blog = await Blog.findById(id).exec();
 
+  if (blog === null) {
+    throw new NotFoundError(
+      ERROR_CODES.RESOURCE_NOT_FOUND,
+      `Blog with id ${id} not found`,
+    );
+  }
+
   if (!blog.user.equals(user._id)) {
     throw new ForbiddenError(
       ERROR_CODES.NOT_AUTHORIZED,

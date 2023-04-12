@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 const { faker } = require('@faker-js/faker');
 
 const app = require('../../app');
-const { db, seedMultiple } = require('../helpers');
+const {
+  createAuthedUser,
+  db,
+  seedMultiple,
+} = require('../helpers');
 const { seedBlog } = require('../seeders');
 const { getRandomNumber } = require('../../src/utils');
 
@@ -56,7 +60,9 @@ describe('GET /api/blogs', () => {
 });
 
 describe('POST /api/blogs', () => {
-  it('should create a new blog', async () => {
+  const currentUser = createAuthedUser();
+
+  it('should create a new blog if authenticated', async () => {
     const data = {
       title: faker.lorem.words(3),
       author: faker.name.fullName(),
@@ -66,6 +72,7 @@ describe('POST /api/blogs', () => {
 
     const res = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${currentUser.token}`)
       .send(data);
 
     expect(res.statusCode).toBe(201);
@@ -80,6 +87,27 @@ describe('POST /api/blogs', () => {
     expect(blogs.body[0].likes).toBe(data.likes);
   });
 
+  it('should set user field equal to authenticated user', async () => {
+    const data = {
+      title: faker.lorem.words(3),
+      author: faker.name.fullName(),
+      url: faker.internet.url(),
+      likes: getRandomNumber(100),
+    };
+
+    const res = await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${currentUser.token}`)
+      .send(data);
+
+    expect(res.statusCode).toBe(201);
+
+    const blogs = await api
+      .get('/api/blogs');
+
+    expect(blogs.body[0].user.id).toBe(currentUser.data.id);
+  });
+
   it('should default likes to 0 if property is missing', async () => {
     const dataWithoutLikes = {
       title: faker.lorem.words(3),
@@ -89,6 +117,7 @@ describe('POST /api/blogs', () => {
 
     const res = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${currentUser.token}`)
       .send(dataWithoutLikes);
 
     expect(res.statusCode).toBe(201);
@@ -99,6 +128,16 @@ describe('POST /api/blogs', () => {
     expect(blogs.body[0].likes).toBe(0);
   });
 
+  it('should return 401 if unauthenticated', async () => {
+    const res = await api
+      .post('/api/blogs')
+      .send({});
+
+    expect(res.statusCode).toBe(401);
+    expect(res.body.code).toBe('MISSING_AUTH_TOKEN');
+    expect(res.body.message).toBe('Auth header must be set');
+  });
+
   it('should return 400 if \'title\' field is missing', async () => {
     const dataWithoutTitle = {
       author: faker.name.fullName(),
@@ -107,6 +146,7 @@ describe('POST /api/blogs', () => {
 
     const res = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${currentUser.token}`)
       .send(dataWithoutTitle);
 
     expect(res.statusCode).toBe(400);
@@ -121,6 +161,7 @@ describe('POST /api/blogs', () => {
 
     const res = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${currentUser.token}`)
       .send(dataWithoutAuthor);
 
     expect(res.statusCode).toBe(400);
@@ -135,6 +176,7 @@ describe('POST /api/blogs', () => {
 
     const res = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${currentUser.token}`)
       .send(dataWithoutUrl);
 
     expect(res.statusCode).toBe(400);
@@ -179,20 +221,14 @@ describe('PUT /api/blogs/:id', () => {
 });
 
 describe('DELETE /api/blogs/:id', () => {
-  it('should return 204', async () => {
-    const blog = await seedBlog();
+  const currentUser = createAuthedUser();
+
+  it('should remove blog belonging to authed user from database', async () => {
+    const blog = await seedBlog({ user: currentUser.data.id });
 
     const res = await api
-      .delete(`/api/blogs/${blog._id}`);
-
-    expect(res.statusCode).toBe(204);
-  });
-
-  it('should remove blog from database', async () => {
-    const blog = await seedBlog();
-
-    const res = await api
-      .delete(`/api/blogs/${blog._id}`);
+      .delete(`/api/blogs/${blog._id}`)
+      .set('Authorization', `Bearer ${currentUser.token}`);
 
     expect(res.statusCode).toBe(204);
 
@@ -202,20 +238,33 @@ describe('DELETE /api/blogs/:id', () => {
     expect(blogs.body).toHaveLength(0);
   });
 
-  it('should return 204 if blog doesn\'t exist', async () => {
+  it('should return 403 if user attempts to remove another\'s blog', async () => {
+    const blog = await seedBlog();
+
+    const res = await api
+      .delete(`/api/blogs/${blog._id}`)
+      .set('Authorization', `Bearer ${currentUser.token}`);
+
+    expect(res.statusCode).toBe(403);
+    expect(res.body.code).toBe('NOT_AUTHORIZED');
+  });
+
+  it('should return 404 if blog doesn\'t exist', async () => {
     const fakeId = new mongoose.Types.ObjectId().toString();
 
     const res = await api
-      .delete(`/api/blogs/${fakeId}`);
+      .delete(`/api/blogs/${fakeId}`)
+      .set('Authorization', `Bearer ${currentUser.token}`);
 
-    expect(res.statusCode).toBe(204);
+    expect(res.statusCode).toBe(404);
   });
 
   it('should return 400 if \'id\' is invalid', async () => {
     const invalidId = getRandomNumber(1000);
 
     const res = await api
-      .delete(`/api/blogs/${invalidId}`);
+      .delete(`/api/blogs/${invalidId}`)
+      .set('Authorization', `Bearer ${currentUser.token}`);
 
     expect(res.statusCode).toBe(400);
     expect(res.body.code).toBe('CASTING_FAILURE');
