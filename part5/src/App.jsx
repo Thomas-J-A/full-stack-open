@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
+import NewBlogForm from './components/NewBlogForm';
 import Notification from './components/UI/notification/Notification';
 import Error from './components/UI/error/Error';
 import Button from './components/UI/button/Button';
@@ -39,6 +40,7 @@ const App = () => {
 
     if (currentUserJSON) {
       const userAndToken = JSON.parse(currentUserJSON);
+      blogService.setToken(userAndToken.token);
       setUser(userAndToken);
     }
   }, []);
@@ -56,6 +58,7 @@ const App = () => {
         'currentUserAndToken',
         JSON.stringify(userAndToken),
       );
+      blogService.setToken(userAndToken.token);
       setUser(userAndToken);
       setUsername('');
       setPassword('');
@@ -98,6 +101,12 @@ const App = () => {
           <h2>Blogs</h2>
           <p>{`Logged in as ${user.user.name}`}</p>
           <Button text="Logout" handleClick={handleLogout} />
+          <h3>Create New Blog</h3>
+          <NewBlogForm
+            setBlogs={setBlogs}
+            setNotificationMsg={setNotificationMsg}
+            setErrorMsg={setErrorMsg}
+          />
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
