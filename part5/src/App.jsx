@@ -7,14 +7,11 @@ import Notification from './components/UI/notification/Notification';
 import Error from './components/UI/error/Error';
 import Button from './components/UI/button/Button';
 import blogService from './services/blog.service';
-import loginService from './services/login.service';
 import logger from './utils/logger.util';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [notificationMsg, setNotificationMsg] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -45,32 +42,6 @@ const App = () => {
     }
   }, []);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    try {
-      const userAndToken = await loginService.logIn({
-        username,
-        password,
-      });
-
-      localStorage.setItem(
-        'currentUserAndToken',
-        JSON.stringify(userAndToken),
-      );
-      blogService.setToken(userAndToken.token);
-      setUser(userAndToken);
-      setUsername('');
-      setPassword('');
-    } catch (err) {
-      logger.error('Error:', err.stack);
-      setErrorMsg('Wrong credentials');
-      setTimeout(() => {
-        setErrorMsg(null);
-      }, 5000);
-    }
-  };
-
   const handleLogout = () => {
     localStorage.removeItem('currentUserAndToken');
     setUser(null);
@@ -86,13 +57,7 @@ const App = () => {
       {!user && (
         <div>
           <h2>Log in to app</h2>
-          <LoginForm
-            handleLogin={handleLogin}
-            username={username}
-            setUsername={setUsername}
-            password={password}
-            setPassword={setPassword}
-          />
+          <LoginForm setUser={setUser} setErrorMsg={setErrorMsg} />
         </div>
       )}
 
