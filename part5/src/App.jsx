@@ -4,6 +4,7 @@ import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
 import Notification from './components/UI/notification/Notification';
 import Error from './components/UI/error/Error';
+import Button from './components/UI/button/Button';
 import blogService from './services/blog.service';
 import loginService from './services/login.service';
 import logger from './utils/logger.util';
@@ -33,6 +34,15 @@ const App = () => {
     fetchBlogs();
   }, []);
 
+  useEffect(() => {
+    const currentUserJSON = localStorage.getItem('currentUserAndToken');
+
+    if (currentUserJSON) {
+      const userAndToken = JSON.parse(currentUserJSON);
+      setUser(userAndToken);
+    }
+  }, []);
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -42,6 +52,10 @@ const App = () => {
         password,
       });
 
+      localStorage.setItem(
+        'currentUserAndToken',
+        JSON.stringify(userAndToken),
+      );
       setUser(userAndToken);
       setUsername('');
       setPassword('');
@@ -52,6 +66,11 @@ const App = () => {
         setErrorMsg(null);
       }, 5000);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('currentUserAndToken');
+    setUser(null);
   };
 
   return (
@@ -78,6 +97,7 @@ const App = () => {
         <div>
           <h2>Blogs</h2>
           <p>{`Logged in as ${user.user.name}`}</p>
+          <Button text="Logout" handleClick={handleLogout} />
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
