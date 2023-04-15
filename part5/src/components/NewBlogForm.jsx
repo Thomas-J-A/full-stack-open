@@ -1,18 +1,11 @@
 import { useState } from 'react';
 
-import blogService from '../services/blog.service';
-import logger from '../utils/logger.util';
-
-const NewBlogForm = ({
-  setBlogs,
-  setNotificationMsg,
-  setErrorMsg,
-}) => {
+const NewBlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
 
-  const createNewBlog = async (e) => {
+  const addBlog = async (e) => {
     e.preventDefault();
 
     const newObj = {
@@ -21,28 +14,15 @@ const NewBlogForm = ({
       url,
     };
 
-    try {
-      const newBlog = await blogService.create(newObj);
+    createBlog(newObj);
 
-      setTitle('');
-      setAuthor('');
-      setUrl('');
-      setBlogs((prev) => [...prev, newBlog]);
-      setNotificationMsg(`Blog added: ${title} by ${author}`);
-      setTimeout(() => {
-        setNotificationMsg(null);
-      }, 5000);
-    } catch (err) {
-      logger.error('Error:', err.stack);
-      setErrorMsg('Failed to create new blog');
-      setTimeout(() => {
-        setErrorMsg(null);
-      }, 5000);
-    }
+    setTitle('');
+    setAuthor('');
+    setUrl('');
   };
 
   return (
-    <form onSubmit={createNewBlog}>
+    <form onSubmit={addBlog}>
       <div>
         Title:
         <input
