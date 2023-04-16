@@ -95,7 +95,12 @@ const App = () => {
             <NewBlogForm createBlog={addBlog} />
           </Toggleable>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              setBlogs={setBlogs}
+              setErrorMsg={setErrorMsg}
+            />
           ))}
         </div>
       )}
