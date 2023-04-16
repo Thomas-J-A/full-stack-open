@@ -3,6 +3,7 @@ import {
   forwardRef,
   useImperativeHandle,
 } from 'react';
+import PropTypes from 'prop-types';
 
 import Button from './UI/button/Button';
 
@@ -32,5 +33,9 @@ const Toggleable = forwardRef(({ buttonLabel, children }, ref) => {
 });
 
 Toggleable.displayName = 'Toggleable';
+
+Toggleable.propTypes = {
+  buttonLabel: PropTypes.string.isRequired,
+};
 
 export default Toggleable;

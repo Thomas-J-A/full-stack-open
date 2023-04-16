@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import Button from './UI/button/Button';
 
@@ -82,5 +83,17 @@ const Blog = ({
     </div>
   );
 };
+
+/* eslint-disable */
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+  setErrorMsg: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    user: PropTypes.object.isRequired,
+    token: PropTypes.string.isRequired,
+  }).isRequired,
+};
+/* eslint-enable */
 
 export default Blog;
