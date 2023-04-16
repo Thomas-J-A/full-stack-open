@@ -4,6 +4,7 @@ const BlogList = ({
   blogs,
   setBlogs,
   setErrorMsg,
+  user,
 }) => (
   <div>
     {blogs
@@ -14,6 +15,7 @@ const BlogList = ({
           blog={blog}
           setBlogs={setBlogs}
           setErrorMsg={setErrorMsg}
+          user={user}
         />
       ))}
   </div>

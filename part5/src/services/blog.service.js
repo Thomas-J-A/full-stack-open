@@ -29,9 +29,20 @@ const like = async (id) => {
   return res.data;
 };
 
+const remove = async (id) => {
+  const config = {
+    headers: {
+      Authorization: token,
+    },
+  };
+
+  await axios.delete(`${baseUrl}/${id}`, config);
+};
+
 export default {
   setToken,
   getAll,
   create,
   like,
+  remove,
 };

@@ -12,6 +12,7 @@ const Blog = ({
   blog,
   setBlogs,
   setErrorMsg,
+  user,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -36,6 +37,28 @@ const Blog = ({
     }
   };
 
+  const removeBlog = async () => {
+    try {
+      // eslint-disable-next-line
+      const isConfirmed = confirm(`Remove blog ${blog.title} by ${blog.author}?`);
+
+      if (isConfirmed) {
+        await blogService.remove(blog.id);
+
+        setBlogs((prev) => prev.filter((b) => (
+          b.id !== blog.id
+        )));
+      }
+    } catch (err) {
+      logger.error('Error:', err.stack);
+
+      setErrorMsg('Failed to remove blog');
+      setTimeout(() => {
+        setErrorMsg(null);
+      }, 5000);
+    }
+  };
+
   return (
     <div className="blog">
       <div>
@@ -51,6 +74,9 @@ const Blog = ({
             <Button text="Like" handleClick={likeBlog} />
           </p>
           <p>{blog.user.name}</p>
+          {blog.user.id === user.user.id && (
+            <Button text="Remove" handleClick={removeBlog} />
+          )}
         </div>
       )}
     </div>

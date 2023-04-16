@@ -98,6 +98,7 @@ const App = () => {
             blogs={blogs}
             setBlogs={setBlogs}
             setErrorMsg={setErrorMsg}
+            user={user}
           />
         </div>
       )}
