@@ -38,17 +38,15 @@ const addEntry = async ({
   return savedBlog;
 };
 
-// await post.populate({
-//   path: 'postedBy',
-//   select: 'fullName avatarUrl',
-// });
-
 const updateLikes = async (id) => {
-  const updatedBlog = await Blog.findByIdAndUpdate(
-    id,
-    { $inc: { likes: 1 } },
-    { new: true },
-  );
+  const updatedBlog = await Blog
+    .findByIdAndUpdate(
+      id,
+      { $inc: { likes: 1 } },
+      { new: true },
+    )
+    .populate('user', 'username name')
+    .exec();
 
   if (updatedBlog === null) {
     throw new NotFoundError(
