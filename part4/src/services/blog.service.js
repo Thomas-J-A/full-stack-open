@@ -31,8 +31,17 @@ const addEntry = async ({
   user.blogs = [...user.blogs, savedBlog._id];
   await user.save();
 
+  // Frontend needs to display user's name
+  // By default, user only holds an ObjectId
+  await savedBlog.populate('user', 'name');
+
   return savedBlog;
 };
+
+// await post.populate({
+//   path: 'postedBy',
+//   select: 'fullName avatarUrl',
+// });
 
 const updateLikes = async (id) => {
   const updatedBlog = await Blog.findByIdAndUpdate(
