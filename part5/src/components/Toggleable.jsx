@@ -31,4 +31,6 @@ const Toggleable = forwardRef(({ buttonLabel, children }, ref) => {
   );
 });
 
+Toggleable.displayName = 'Toggleable';
+
 export default Toggleable;
