@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import Button from './UI/button/Button';
+import Button from '../UI/Button/Button';
 
-import blogService from '../services/blog.service';
+import blogService from '../../services/blog.service';
 
-import logger from '../utils/logger.util';
+import logger from '../../utils/logger.util';
 
-import './blog.css';
+import './Blog.css';
 
 const Blog = ({
   blog,

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import Blog from './Blog';
+import Blog from '../Blog/Blog';
 
 const BlogList = ({
   blogs,

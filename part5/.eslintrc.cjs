@@ -24,7 +24,6 @@ module.exports = {
   plugins: [
     'react',
     'jest',
-    'jest-extended',
     'jest-dom',
     'testing-library',
   ],

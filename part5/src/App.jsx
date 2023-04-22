@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 
-import BlogList from './components/BlogList';
-import LoginForm from './components/LoginForm';
-import NewBlogForm from './components/NewBlogForm';
-import Toggleable from './components/Toggleable';
-import Notification from './components/UI/notification/Notification';
-import Error from './components/UI/error/Error';
-import Button from './components/UI/button/Button';
+import BlogList from './components/BlogList/BlogList';
+import LoginForm from './components/LoginForm/LoginForm';
+import NewBlogForm from './components/NewBlogForm/NewBlogForm';
+import Toggleable from './components/Toggleable/Toggleable';
+import Notification from './components/UI/Notification/Notification';
+import Error from './components/UI/Error/Error';
+import Button from './components/UI/Button/Button';
 import blogService from './services/blog.service';
 import logger from './utils/logger.util';
 

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import blogService from '../services/blog.service';
-import loginService from '../services/login.service';
-import logger from '../utils/logger.util';
+import blogService from '../../services/blog.service';
+import loginService from '../../services/login.service';
+import logger from '../../utils/logger.util';
 
 const LoginForm = ({ setUser, setErrorMsg }) => {
   const [username, setUsername] = useState('');

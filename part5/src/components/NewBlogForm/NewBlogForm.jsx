@@ -30,6 +30,7 @@ const NewBlogForm = ({ createBlog }) => {
           type="text"
           value={title}
           onChange={({ target }) => setTitle(target.value)}
+          placeholder="Meditations"
         />
       </div>
       <div>
@@ -38,6 +39,7 @@ const NewBlogForm = ({ createBlog }) => {
           type="text"
           value={author}
           onChange={({ target }) => setAuthor(target.value)}
+          placeholder="Marcus Aurelius"
         />
       </div>
       <div>
@@ -46,6 +48,7 @@ const NewBlogForm = ({ createBlog }) => {
           type="text"
           value={url}
           onChange={({ target }) => setUrl(target.value)}
+          placeholder="meditations-book.co.uk"
         />
       </div>
       <button type="submit">Create</button>

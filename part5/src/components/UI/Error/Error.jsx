@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import './error.css';
+import './Error.css';
 
 const Error = ({ message }) => (
   <div className="error">

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import './notification.css';
+import './Notification.css';
 
 const Notification = ({ message }) => (
   <div className="notification">

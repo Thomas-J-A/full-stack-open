@@ -5,7 +5,7 @@ import {
 } from 'react';
 import PropTypes from 'prop-types';
 
-import Button from './UI/button/Button';
+import Button from '../UI/Button/Button';
 
 const Toggleable = forwardRef(({ buttonLabel, children }, ref) => {
   const [isVisible, setIsVisible] = useState(false);
