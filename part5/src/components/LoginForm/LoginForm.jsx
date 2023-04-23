@@ -38,20 +38,26 @@ const LoginForm = ({ setUser, setErrorMsg }) => {
   return (
     <form onSubmit={handleLogin}>
       <div>
-        Username
-        <input
-          type="text"
-          value={username}
-          onChange={({ target }) => setUsername(target.value)}
-        />
+        <label htmlFor="username">
+          Username:
+          <input
+            id="username"
+            type="text"
+            value={username}
+            onChange={({ target }) => setUsername(target.value)}
+          />
+        </label>
       </div>
       <div>
-        Password
-        <input
-          type="password"
-          value={password}
-          onChange={({ target }) => setPassword(target.value)}
-        />
+        <label htmlFor="password">
+          Password:
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </label>
       </div>
       <button type="submit">Log In</button>
     </form>
