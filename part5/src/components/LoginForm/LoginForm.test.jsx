@@ -6,7 +6,7 @@ import LoginForm from './LoginForm';
 
 import loginServiceMock from '../../services/login.service';
 
-import logger from '../../utils/logger.util';
+import loggerMock from '../../utils/logger.util';
 
 jest.mock('../../services/blog.service');
 jest.mock('../../services/login.service');
@@ -65,6 +65,6 @@ describe('<LoginForm />', () => {
 
     await logIn(user);
 
-    expect(logger.error).toHaveBeenCalled();
+    expect(loggerMock.error).toHaveBeenCalled();
   });
 });
