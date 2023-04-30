@@ -25,3 +25,18 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 import '@testing-library/cypress/add-commands';
+
+Cypress.Commands.add('logIn', ({ username, password }) => {
+  cy
+    .request(
+      'POST',
+      `${Cypress.env('BACKEND')}/api/login`,
+      { username, password },
+    )
+    .then((res) => {
+      localStorage.setItem('currentUserAndToken', JSON.stringify(res.body));
+
+      // Reload page so that useEffect runs and updates local state
+      cy.visit('/');
+    });
+});

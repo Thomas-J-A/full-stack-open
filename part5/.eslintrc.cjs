@@ -9,7 +9,7 @@ module.exports = {
   ],
   overrides: [
     {
-      files: ['cypress/e2e/*.cy.js'],
+      files: ['cypress/e2e/*.cy.js', 'cypress/support/commands.js'],
       env: { 'cypress/globals': true },
       extends: ['plugin:cypress/recommended'],
       plugins: ['cypress'],

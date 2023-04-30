@@ -25,31 +25,40 @@ const NewBlogForm = ({ createBlog }) => {
   return (
     <form onSubmit={addBlog}>
       <div>
-        Title:
-        <input
-          type="text"
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-          placeholder="Meditations"
-        />
+        <label htmlFor="title">
+          Title:
+          <input
+            id="title"
+            type="text"
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+            placeholder="Meditations"
+          />
+        </label>
       </div>
       <div>
-        Author:
-        <input
-          type="text"
-          value={author}
-          onChange={({ target }) => setAuthor(target.value)}
-          placeholder="Marcus Aurelius"
-        />
+        <label htmlFor="author">
+          Author:
+          <input
+            id="author"
+            type="text"
+            value={author}
+            onChange={({ target }) => setAuthor(target.value)}
+            placeholder="Marcus Aurelius"
+          />
+        </label>
       </div>
       <div>
-        URL:
-        <input
-          type="text"
-          value={url}
-          onChange={({ target }) => setUrl(target.value)}
-          placeholder="meditations-book.co.uk"
-        />
+        <label htmlFor="url">
+          URL:
+          <input
+            id="url"
+            type="text"
+            value={url}
+            onChange={({ target }) => setUrl(target.value)}
+            placeholder="meditations-book.co.uk"
+          />
+        </label>
       </div>
       <button type="submit">Create</button>
     </form>

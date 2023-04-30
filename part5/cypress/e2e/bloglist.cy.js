@@ -42,4 +42,22 @@ describe('Bloglist app', function () {
         .and('have.css', 'color', 'rgb(255, 0, 0)');
     });
   });
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.logIn({ username: this.user.username, password: this.user.password });
+      cy.fixture('blog').as('blog');
+    });
+
+    it('should create a new blog', function () {
+      cy.findByRole('button', { name: /create new blog/i }).click();
+      cy.findByLabelText(/title/i).type(this.blog.title);
+      cy.findByLabelText(/author/i).type(this.blog.author);
+      cy.findByLabelText(/url/i).type(this.blog.url);
+      cy.findByRole('button', { name: /create/i }).click();
+
+      cy.findByText(/blog added/i).should('be.visible');
+      cy.get('.blog').findByText(/meditations/i).should('exist');
+    });
+  });
 });
