@@ -2,17 +2,33 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    'jest/globals': true,
   },
   extends: [
     'airbnb',
     'plugin:react/recommended',
-    'plugin:jest/recommended',
-    'plugin:jest/style',
-    'plugin:jest-dom/recommended',
-    'plugin:testing-library/react',
   ],
   overrides: [
+    {
+      files: ['cypress/e2e/*.cy.js'],
+      env: { 'cypress/globals': true },
+      extends: ['plugin:cypress/recommended'],
+      plugins: ['cypress'],
+    },
+    {
+      files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+      env: { 'jest/globals': true },
+      extends: [
+        'plugin:jest/recommended',
+        'plugin:jest/style',
+        'plugin:jest-dom/recommended',
+        'plugin:testing-library/react',
+      ],
+      plugins: [
+        'jest',
+        'jest-dom',
+        'testing-library',
+      ],
+    },
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -23,9 +39,6 @@ module.exports = {
   },
   plugins: [
     'react',
-    'jest',
-    'jest-dom',
-    'testing-library',
   ],
   settings: {
     react: {

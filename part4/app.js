@@ -1,12 +1,17 @@
 /* eslint-disable global-require */
 
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
 
+// If in prod environment, give values directly to environment
+// Else, load environment-specific .env file
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
+  require('dotenv').config({
+    path: path.resolve(__dirname, `.env.${process.env.NODE_ENV}`),
+  });
 }
 
 // Set up prod/dev database
