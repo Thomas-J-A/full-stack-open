@@ -26,6 +26,18 @@
 
 import '@testing-library/cypress/add-commands';
 
+Cypress.Commands.add('createUser', ({
+  username,
+  name,
+  password,
+}) => {
+  cy.request(
+    'POST',
+    `${Cypress.env('BACKEND')}/api/users`,
+    { username, name, password },
+  );
+});
+
 Cypress.Commands.add('logIn', ({ username, password }) => {
   cy
     .request(

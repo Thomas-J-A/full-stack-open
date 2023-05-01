@@ -6,8 +6,8 @@ describe('Bloglist app', function () {
 
     // Seed a user in db
     cy
-      .fixture('user').as('user').then((user) => {
-        cy.request('POST', `${Cypress.env('BACKEND')}/api/users`, user);
+      .fixture('users').as('users').then((users) => {
+        cy.request('POST', `${Cypress.env('BACKEND')}/api/users`, users[0]);
       });
 
     // Visit route page
@@ -23,15 +23,15 @@ describe('Bloglist app', function () {
 
   describe('Login', function () {
     it('succeeds with correct credentials', function () {
-      cy.findByLabelText(/username/i).type(this.user.username);
-      cy.findByLabelText(/password/i).type(this.user.password);
+      cy.findByLabelText(/username/i).type(this.users[0].username);
+      cy.findByLabelText(/password/i).type(this.users[0].password);
       cy.findByRole('button', { name: /log in/i }).click();
 
       cy.findByText(/logged in as/i).should('be.visible');
     });
 
     it('fails with incorrect credentials', function () {
-      cy.findByLabelText(/username/i).type(this.user.username);
+      cy.findByLabelText(/username/i).type(this.users[0].username);
       cy.findByLabelText(/password/i).type('incorrect password');
       cy.findByRole('button', { name: /log in/i }).click();
 
@@ -45,7 +45,7 @@ describe('Bloglist app', function () {
 
   describe('When logged in', function () {
     beforeEach(function () {
-      cy.logIn({ username: this.user.username, password: this.user.password });
+      cy.logIn({ username: this.users[0].username, password: this.users[0].password });
       cy.fixture('blog').as('blog');
     });
 
@@ -107,6 +107,35 @@ describe('Bloglist app', function () {
           .click();
 
         cy.get('@blog entry').should('not.exist');
+      });
+
+      it('should only show remove button for creator of blog', function () {
+        // Log out creator of blog
+        cy.findByRole('button', { name: /logout/i }).click();
+
+        // Create new user and log them in
+        cy.createUser({
+          username: this.users[1].username,
+          name: this.users[1].name,
+          password: this.users[1].password,
+        });
+
+        cy.logIn({
+          username: this.users[1].username,
+          password: this.users[1].password,
+        });
+
+        cy.get('.blog').as('blog entry');
+
+        cy
+          .get('@blog entry')
+          .findByRole('button', { name: /view/i })
+          .click();
+
+        cy
+          .get('@blog entry')
+          .findByRole('button', { name: /remove/i })
+          .should('not.exist');
       });
     });
   });
