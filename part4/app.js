@@ -14,8 +14,8 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-// Set up prod/dev database
-// Test database set up in each test suite
+// Set up prod/dev/e2e database
+// Integration test databases set up in each test suite
 if (process.env.NODE_ENV !== 'test') {
   require('./src/configs/db.config');
 }
@@ -43,6 +43,13 @@ app.use(express.static('dist'));
 app.use(express.json());
 
 app.use('/api', indexRouter);
+
+// Set up e2e testing-only routes
+if (process.env.NODE_ENV === 'e2e') {
+  const testRouter = require('./src/routes/test.route');
+
+  app.use('/test', testRouter);
+}
 
 app.use(handleNotFound);
 app.use(logError);
