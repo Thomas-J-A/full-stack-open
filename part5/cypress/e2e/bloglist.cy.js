@@ -59,5 +59,39 @@ describe('Bloglist app', function () {
       cy.findByText(/blog added/i).should('be.visible');
       cy.get('.blog').findByText(/meditations/i).should('exist');
     });
+
+    describe('and a blog exists', function () {
+      beforeEach(function () {
+        cy.createBlog({
+          title: this.blog.title,
+          author: this.blog.author,
+          url: this.blog.url,
+        });
+      });
+
+      it('should like a blog', function () {
+        cy.get('.blog').as('blog entry');
+
+        cy
+          .get('@blog entry')
+          .findByRole('button', { name: /view/i })
+          .click();
+
+        cy
+          .get('@blog entry')
+          .findByText(/likes/i)
+          .should('include.text', '0');
+
+        cy
+          .get('@blog entry')
+          .findByRole('button', { name: /like/i })
+          .click();
+
+        cy
+          .get('@blog entry')
+          .findByText(/likes/i)
+          .should('include.text', '1');
+      });
+    });
   });
 });

@@ -40,3 +40,25 @@ Cypress.Commands.add('logIn', ({ username, password }) => {
       cy.visit('/');
     });
 });
+
+Cypress.Commands.add('createBlog', ({
+  title,
+  author,
+  url,
+}) => {
+  cy.request({
+    method: 'POST',
+    url: `${Cypress.env('BACKEND')}/api/blogs`,
+    body: {
+      title,
+      author,
+      url,
+    },
+    headers: {
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem('currentUserAndToken')).token}`,
+    },
+  });
+
+  // Reload page to update UI
+  cy.visit('/');
+});
