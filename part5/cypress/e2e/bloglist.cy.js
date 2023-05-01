@@ -92,6 +92,22 @@ describe('Bloglist app', function () {
           .findByText(/likes/i)
           .should('include.text', '1');
       });
+
+      it('should remove user\'s own blog', function () {
+        cy.get('.blog').as('blog entry');
+
+        cy
+          .get('@blog entry')
+          .findByRole('button', { name: /view/i })
+          .click();
+
+        cy
+          .get('@blog entry')
+          .findByRole('button', { name: /remove/i })
+          .click();
+
+        cy.get('@blog entry').should('not.exist');
+      });
     });
   });
 });
