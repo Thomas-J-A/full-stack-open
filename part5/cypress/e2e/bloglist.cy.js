@@ -46,14 +46,14 @@ describe('Bloglist app', function () {
   describe('When logged in', function () {
     beforeEach(function () {
       cy.logIn({ username: this.users[0].username, password: this.users[0].password });
-      cy.fixture('blog').as('blog');
+      cy.fixture('blogs').as('blogs');
     });
 
     it('should create a new blog', function () {
       cy.findByRole('button', { name: /create new blog/i }).click();
-      cy.findByLabelText(/title/i).type(this.blog.title);
-      cy.findByLabelText(/author/i).type(this.blog.author);
-      cy.findByLabelText(/url/i).type(this.blog.url);
+      cy.findByLabelText(/title/i).type(this.blogs[0].title);
+      cy.findByLabelText(/author/i).type(this.blogs[0].author);
+      cy.findByLabelText(/url/i).type(this.blogs[0].url);
       cy.findByRole('button', { name: /create/i }).click();
 
       cy.findByText(/blog added/i).should('be.visible');
@@ -63,9 +63,9 @@ describe('Bloglist app', function () {
     describe('and a blog exists', function () {
       beforeEach(function () {
         cy.createBlog({
-          title: this.blog.title,
-          author: this.blog.author,
-          url: this.blog.url,
+          title: this.blogs[0].title,
+          author: this.blogs[0].author,
+          url: this.blogs[0].url,
         });
       });
 
@@ -136,6 +136,44 @@ describe('Bloglist app', function () {
           .get('@blog entry')
           .findByRole('button', { name: /remove/i })
           .should('not.exist');
+      });
+    });
+
+    describe('and multiple blogs exist', function () {
+      beforeEach(function () {
+        for (let i = 0; i < 2; i++) { // eslint-disable-line no-plusplus
+          cy.createBlog({
+            title: this.blogs[i].title,
+            author: this.blogs[i].author,
+            url: this.blogs[i].url,
+          });
+        }
+      });
+
+      it('should display blogs in order with most likes first', function () {
+        // Second in list
+        cy
+          .get('.blog')
+          .eq(1)
+          .should('contain', this.blogs[1].title);
+
+        // Find and like that entry
+        cy
+          .findByText(new RegExp(`${this.blogs[1].title} | ${this.blogs[1].author}`, 'i'))
+          .findByRole('button', { name: /view/i })
+          .click();
+
+        cy
+          .findByText(new RegExp(`${this.blogs[1].title} | ${this.blogs[1].author}`, 'i'))
+          .parent()
+          .findByRole('button', { name: /like/i })
+          .click();
+
+        // First in list
+        cy
+          .get('.blog')
+          .eq(0)
+          .should('contain', this.blogs[1].title);
       });
     });
   });
