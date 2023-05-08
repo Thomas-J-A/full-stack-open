@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { doNewAnecdoteAdded } from '../../reducers/anecdotes.reducer';
+import { doNewAnecdoteAdded } from '../../reducers/anecdotesReducer';
 
 const AnecdoteForm = () => {
   const [content, setContent] = useState('');

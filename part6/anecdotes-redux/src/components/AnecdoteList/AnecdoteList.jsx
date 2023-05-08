@@ -2,13 +2,13 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import AnecdoteItem from '../AnecdoteItem/AnecdoteItem';
 
-import { doVoteAdded } from '../../reducers/anecdotes.reducer';
+import { doVoteAdded } from '../../reducers/anecdotesReducer';
 
-import selectSortedAnecdotes from '../../selectors/selectSortedAnecdotes.selector';
+import selectFilteredAndSortedAnecdotes from '../../selectors/selectFilteredAndSortedAnecdotes';
 
 const AnecdoteList = () => {
   const dispatch = useDispatch();
-  const anecdotes = useSelector(selectSortedAnecdotes);
+  const anecdotes = useSelector(selectFilteredAndSortedAnecdotes);
 
   const vote = (id) => {
     dispatch(doVoteAdded(id));
