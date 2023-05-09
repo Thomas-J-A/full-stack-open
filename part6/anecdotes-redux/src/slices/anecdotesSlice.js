@@ -1,19 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import anecdotes from "../data/anecdotes.data";
+// import anecdotes from "../data/anecdotes.data";
 import getId from '../utils/getId.util';
 
-const asObject = (anecdote) => ({
-  content: anecdote,
-  id: getId(),
-  votes: 0,
-});
+// const asObject = (anecdote) => ({
+//   content: anecdote,
+//   id: getId(),
+//   votes: 0,
+// });
 
-const initialState = anecdotes.map(asObject);
+// const initialState = anecdotes.map(asObject);
 
 export const anecdotesSlice = createSlice({
   name: 'anecdotes',
-  initialState,
+  initialState: [],
   reducers: {
     addVote: (state, action) => {
       return state.map((anecdote) => {
@@ -37,9 +37,10 @@ export const anecdotesSlice = createSlice({
         },
       }),
     },
+    setAnecdotes: (state, action) => action.payload,
   },
 });
 
-export const { addVote, addAnecdote } = anecdotesSlice.actions;
+export const { addVote, addAnecdote, setAnecdotes } = anecdotesSlice.actions;
 
 export default anecdotesSlice.reducer;
