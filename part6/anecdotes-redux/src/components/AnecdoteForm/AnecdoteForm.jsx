@@ -1,21 +1,22 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { doNewAnecdoteAdded } from '../../reducers/anecdotesReducer';
+import { addAnecdote } from '../../slices/anecdotesSlice';
 
 const AnecdoteForm = () => {
   const [content, setContent] = useState('');
   const dispatch = useDispatch();
 
-  const addAnecdote = (e) => {
+  const handleAddAnecdote = (e) => {
     e.preventDefault();
-    setContent('');
+    
+    dispatch(addAnecdote(content));
 
-    dispatch(doNewAnecdoteAdded(content));
+    setContent('');
   };
 
   return (
-    <form onSubmit={addAnecdote}>
+    <form onSubmit={handleAddAnecdote}>
       <h2>Create New Anecdote</h2>
       <label>
         Content:

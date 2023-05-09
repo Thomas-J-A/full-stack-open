@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import AnecdoteItem from '../AnecdoteItem/AnecdoteItem';
 
-import { doVoteAdded } from '../../reducers/anecdotesReducer';
+import { addVote } from '../../slices/anecdotesSlice';
 
 import selectFilteredAndSortedAnecdotes from '../../selectors/selectFilteredAndSortedAnecdotes';
 
@@ -10,8 +10,8 @@ const AnecdoteList = () => {
   const dispatch = useDispatch();
   const anecdotes = useSelector(selectFilteredAndSortedAnecdotes);
 
-  const vote = (id) => {
-    dispatch(doVoteAdded(id));
+  const handleAddVote = (id) => {
+    dispatch(addVote({ id }));
   };
 
   return (
@@ -19,7 +19,7 @@ const AnecdoteList = () => {
       <AnecdoteItem
         key={anecdote.id}
         anecdote={anecdote}
-        handleClick={() => vote(anecdote.id)}
+        handleClick={() => handleAddVote(anecdote.id)}
       />
     ))
   );

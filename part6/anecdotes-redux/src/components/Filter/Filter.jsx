@@ -1,11 +1,11 @@
 import { useDispatch } from 'react-redux';
 
-import { doFilterSet } from '../../reducers/filterReducer';
+import { setFilter } from '../../slices/filterSlice';
 
 const Filter = () => {
   const dispatch = useDispatch();
 
-  const handleChange = (e) => dispatch(doFilterSet(e.target.value));
+  const handleChange = (e) => dispatch(setFilter(e.target.value));
 
   return (
     <div>
