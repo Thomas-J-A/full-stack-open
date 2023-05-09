@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 // import anecdotes from "../data/anecdotes.data";
-import getId from '../utils/getId.util';
+// import getId from '../utils/getId.util';
 
 // const asObject = (anecdote) => ({
 //   content: anecdote,
@@ -29,13 +29,13 @@ export const anecdotesSlice = createSlice({
     },
     addAnecdote: {
       reducer: (state, action) => void state.push(action.payload),
-      prepare: (content) => ({
-        payload: {
-          content,
-          id: getId(),
-          votes: 0,
-        },
-      }),
+      // prepare: (content) => ({
+      //   payload: {
+      //     content,
+      //     id: getId(),
+      //     votes: 0,
+      //   },
+      // }),
     },
     setAnecdotes: (state, action) => action.payload,
   },
