@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { addAnecdote } from '../../slices/anecdotesSlice';
+import { showNotificationAsync } from '../../slices/notificationSlice';
 
 const AnecdoteForm = () => {
   const [content, setContent] = useState('');
@@ -11,6 +12,10 @@ const AnecdoteForm = () => {
     e.preventDefault();
     
     dispatch(addAnecdote(content));
+    dispatch(showNotificationAsync({
+      context: 'create',
+      msg: content,
+    }));
 
     setContent('');
   };
