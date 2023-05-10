@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import AnecdoteItem from '../AnecdoteItem/AnecdoteItem';
 
-import { addVote } from '../../slices/anecdotesSlice';
+import { addVoteAsync } from '../../slices/anecdotesSlice';
 import { showNotificationAsync } from '../../slices/notificationSlice';
 
 import selectFilteredAndSortedAnecdotes from '../../selectors/selectFilteredAndSortedAnecdotes';
@@ -12,7 +12,12 @@ const AnecdoteList = () => {
   const anecdotes = useSelector(selectFilteredAndSortedAnecdotes);
 
   const handleAddVote = (anecdote) => {
-    dispatch(addVote({id: anecdote.id }));
+    const newAnecdote = {
+      content: anecdote.content,
+      votes: anecdote.votes + 1,
+    };
+
+    dispatch(addVoteAsync(anecdote.id, newAnecdote));
     dispatch(showNotificationAsync({
       context: 'vote',
       msg: anecdote.content,
