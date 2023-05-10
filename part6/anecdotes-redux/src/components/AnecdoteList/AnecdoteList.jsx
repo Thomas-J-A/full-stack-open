@@ -21,7 +21,7 @@ const AnecdoteList = () => {
     dispatch(showNotificationAsync({
       context: 'vote',
       msg: anecdote.content,
-    }));
+    }, 10));
   };
 
   return (

@@ -20,7 +20,7 @@ const AnecdoteForm = () => {
     dispatch(showNotificationAsync({
       context: 'create',
       msg: content,
-    }));
+    }, 10));
 
     setContent('');
   };
