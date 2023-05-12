@@ -7,6 +7,12 @@ const fetchAnecdotes = async () => {
   return res.data;
 };
 
+const createAnecdote = async (newAnecdote) => {
+  const res = await axios.post(baseUrl, newAnecdote);
+  return res.data;
+};
+
 export {
   fetchAnecdotes,
+  createAnecdote,
 };
