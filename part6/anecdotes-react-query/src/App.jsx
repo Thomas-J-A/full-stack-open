@@ -1,11 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { useNotificationDispatch } from './contexts/NotificationContext';
+
 import { fetchAnecdotes, incrementVotes } from './requests';
 
 import AnecdoteForm from './components/AnecdotesForm/AnecdotesForm';
 import Notification from './components/UI/Notification/Notification';
 
 const App = () => {
+  const notificationDispatch = useNotificationDispatch();
   const queryClient = useQueryClient();
 
   const fetchAnecdotesQuery = useQuery({
@@ -33,6 +36,16 @@ const App = () => {
       ...anecdote,
       votes: anecdote.votes + 1,
     });
+
+    notificationDispatch({
+      type: 'SHOW_NOTIFICATION',
+      payload: {
+        context: 'vote',
+        msg: anecdote.content,
+      },
+    });
+
+    setTimeout(() => notificationDispatch({ type: 'HIDE_NOTIFICATION' }), 5000);
   };
 
   if (fetchAnecdotesQuery.isLoading) {
