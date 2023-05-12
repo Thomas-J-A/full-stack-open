@@ -11,8 +11,28 @@ const AnecdoteForm = () => {
   const queryClient = useQueryClient();
   const createAnecdoteMutation = useMutation({
     mutationFn: createAnecdote,
-    onSuccess: () => {
+    onSuccess: (newAnecdote) => {
       queryClient.invalidateQueries(['anecdotes']);
+      notificationDispatch({
+        type: 'SHOW_NOTIFICATION',
+        payload: {
+          context: 'create',
+          msg: newAnecdote.content,
+        },
+      });
+    
+      setTimeout(() => notificationDispatch({ type: 'HIDE_NOTIFICATION' }), 5000);
+    },
+    onError: (e) => {
+      notificationDispatch({
+        type: 'SHOW_NOTIFICATION',
+        payload: {
+          context: 'error',
+          msg: e.response.data.error,
+        },
+      });
+
+      setTimeout(() => notificationDispatch({ type: 'HIDE_NOTIFICATION' }), 5000);
     },
   });
 
@@ -21,15 +41,6 @@ const AnecdoteForm = () => {
 
     setContent('');
     createAnecdoteMutation.mutate({ content, votes: 0 });
-    notificationDispatch({
-      type: 'SHOW_NOTIFICATION',
-      payload: {
-        context: 'create',
-        msg: content,
-      },
-    });
-
-    setTimeout(() => notificationDispatch({ type: 'HIDE_NOTIFICATION' }), 5000);
   };
 
   return (

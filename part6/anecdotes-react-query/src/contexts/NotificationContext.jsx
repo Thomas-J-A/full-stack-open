@@ -12,8 +12,12 @@ const notificationReducer = (state, action) => {
         return `You upvoted "${formattedMsg}"`;
       }
 
-      // context === 'create'
-      return `You added "${formattedMsg}"`;
+      if (payload.context === 'create') {
+        return `You added "${formattedMsg}"`;
+      }
+
+      // context === 'error'
+      return action.payload.msg;
     case 'HIDE_NOTIFICATION':
       return null;
     default:
