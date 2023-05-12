@@ -12,7 +12,13 @@ const createAnecdote = async (newAnecdote) => {
   return res.data;
 };
 
+const incrementVotes = async (updatedAnecdote) => {
+  const res = await axios.put(`${baseUrl}/${updatedAnecdote.id}`, updatedAnecdote);
+  return res.data;
+};
+
 export {
   fetchAnecdotes,
   createAnecdote,
+  incrementVotes,
 };
