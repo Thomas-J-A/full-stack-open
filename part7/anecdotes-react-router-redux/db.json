@@ -1,0 +1,67 @@
+{
+  "anecdotes": [
+    {
+      "content": "Adding manpower to a late software project makes it later!",
+      "author": "Party Jimbo",
+      "url": "jimmypartiez.co.uk",
+      "votes": 16,
+      "id": "21149"
+    },
+    {
+      "content": "The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
+      "author": "Sacha Baron Cohen",
+      "url": "sash.com",
+      "votes": 2,
+      "id": "69581"
+    },
+    {
+      "content": "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
+      "author": "Bob Jones",
+      "url": "bobby.com",
+      "id": "36975",
+      "votes": 1
+    },
+    {
+      "content": "Premature optimization is the root of all evil.",
+      "author": "Eugene Sage",
+      "url": "eugenesage.ie",
+      "id": "25170",
+      "votes": 0
+    },
+    {
+      "content": "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
+      "author": "Bob Jones",
+      "url": "bobby.com",
+      "votes": 8,
+      "id": "98312"
+    },
+    {
+      "content": "Even monkies fall from trees",
+      "author": "Donald Trumps",
+      "url": "trumps2024.com",
+      "votes": 2,
+      "id": "Zj2mYUn"
+    },
+    {
+      "content": "s",
+      "author": "s",
+      "url": "s",
+      "votes": 0,
+      "id": "aDwc2j4"
+    },
+    {
+      "content": "s",
+      "author": "s",
+      "url": "s",
+      "votes": 0,
+      "id": "2d23U_z"
+    },
+    {
+      "content": "foobar",
+      "author": "a",
+      "url": "a",
+      "votes": 0,
+      "id": "73vCVBs"
+    }
+  ]
+}
