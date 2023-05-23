@@ -32,4 +32,16 @@ describe('useField', () => {
     act(() => result.current.onChange({ target: { value: gibberish } }));
     expect(result.current.value).toBe(gibberish);
   });
+
+  it('should reset value to an empty string', () => {
+    const gibberish = faker.word.noun();
+
+    const { result } = renderHook(() => useField('text'));
+
+    act(() => result.current.onChange({ target: { value: gibberish } }));
+    expect(result.current.value).toBe(gibberish);
+
+    act(() => result.current.reset());
+    expect(result.current.value).toBe('');
+  });
 });

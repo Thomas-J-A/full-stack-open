@@ -39,6 +39,12 @@ const CreateNewForm = () => {
     }
   };
 
+  const handleReset = () => {
+    content.reset();
+    author.reset();
+    url.reset();
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <label htmlFor="content">
@@ -69,6 +75,7 @@ const CreateNewForm = () => {
         />
       </label>
       <button type="submit">Create</button>
+      <button type="button" onClick={handleReset}>Reset</button>
     </form>
   );
 };
