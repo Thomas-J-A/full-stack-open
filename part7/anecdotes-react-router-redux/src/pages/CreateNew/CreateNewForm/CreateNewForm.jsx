@@ -1,14 +1,15 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+
+import useField from '../../../hooks/useField';
 
 import { useAddNewAnecdoteMutation } from '../../../redux/apiSlice';
 import { showNotificationAsync } from '../../../redux/notificationSlice';
 
 const CreateNewForm = () => {
-  const [content, setContent] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
+  const content = useField('text');
+  const author = useField('text');
+  const url = useField('text');
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -18,9 +19,9 @@ const CreateNewForm = () => {
     e.preventDefault();
 
     const anecdoteData = {
-      content,
-      author,
-      url,
+      content: content.value,
+      author: author.value,
+      url: url.value,
       votes: 0,
     };
 
@@ -29,7 +30,7 @@ const CreateNewForm = () => {
 
       dispatch(showNotificationAsync({
         context: 'create',
-        msg: content,
+        msg: content.value,
       }, 5));
 
       navigate('/');
@@ -44,24 +45,27 @@ const CreateNewForm = () => {
         Content:
         <input
           id="content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
+          type={content.type}
+          value={content.value}
+          onChange={content.onChange}
         />
       </label>
       <label htmlFor="author">
         Author:
         <input
           id="author"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
+          type={author.type}
+          value={author.value}
+          onChange={author.onChange}
         />
       </label>
       <label htmlFor="url">
         URL:
         <input
           id="url "
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
+          type={url.type}
+          value={url.value}
+          onChange={url.onChange}
         />
       </label>
       <button type="submit">Create</button>

@@ -36,7 +36,7 @@ export const apiSlice = createApi({
       }),
       // Optimistically update single details, refetch entire collection
       // invalidatesTags: () => [{ type: 'Anecdote', id: 'LIST' }],
-      async onQueryStarted({ anecdoteId, ...patchData}, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ anecdoteId, ...patchData }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           apiSlice.util.updateQueryData('getAnecdote', anecdoteId, (draft) => {
             draft.votes += 1;
