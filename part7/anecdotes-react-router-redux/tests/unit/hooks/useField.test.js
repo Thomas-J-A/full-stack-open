@@ -28,7 +28,7 @@ describe('useField', () => {
     const { result } = renderHook(() => useField('text'));
 
     // Any updates to state are applied before assertions when using *act*
-    // If you need to wait (data fetching, etc), then *await waitForNextUpdate()*
+    // If you need to wait (data fetching, etc), then *await waitFor(() => expect())*
     act(() => result.current.onChange({ target: { value: gibberish } }));
     expect(result.current.value).toBe(gibberish);
   });
@@ -45,3 +45,10 @@ describe('useField', () => {
     expect(result.current.value).toBe('');
   });
 });
+
+// Testing custom hooks
+// mock ==> renderHook ==> waitFor/act ==> expect
+
+// Testing components
+// mock ==> render ==> query DOM for elements ==>
+// simulate user events ==> assert against rendered output
