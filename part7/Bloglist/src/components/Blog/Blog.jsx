@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 
 import Button from '../UI/Button/Button';
+
+import { showNotificationAsync } from '../../redux/notificationSlice';
 
 import blogService from '../../services/blog.service';
 
@@ -9,8 +12,9 @@ import logger from '../../utils/logger.util';
 
 import './Blog.css';
 
-const Blog = ({ blog, setBlogs, setErrorMsg, user }) => {
+const Blog = ({ blog, setBlogs, user }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const dispatch = useDispatch();
 
   const toggleExpanded = () => setIsExpanded((prev) => !prev);
 
@@ -24,10 +28,12 @@ const Blog = ({ blog, setBlogs, setErrorMsg, user }) => {
     } catch (err) {
       logger.error('Error:', err.stack);
 
-      setErrorMsg('Failed to like blog');
-      setTimeout(() => {
-        setErrorMsg(null);
-      }, 5000);
+      dispatch(
+        showNotificationAsync(
+          { success: false, msg: 'Failed to like blog' },
+          5,
+        ),
+      );
     }
   };
 
@@ -46,10 +52,12 @@ const Blog = ({ blog, setBlogs, setErrorMsg, user }) => {
     } catch (err) {
       logger.error('Error:', err.stack);
 
-      setErrorMsg('Failed to remove blog');
-      setTimeout(() => {
-        setErrorMsg(null);
-      }, 5000);
+      dispatch(
+        showNotificationAsync(
+          { success: false, msg: 'Failed to remove blog' },
+          5,
+        ),
+      );
     }
   };
 
@@ -81,7 +89,6 @@ const Blog = ({ blog, setBlogs, setErrorMsg, user }) => {
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   setBlogs: PropTypes.func.isRequired,
-  setErrorMsg: PropTypes.func.isRequired,
   user: PropTypes.shape({
     user: PropTypes.object.isRequired,
     token: PropTypes.string.isRequired,

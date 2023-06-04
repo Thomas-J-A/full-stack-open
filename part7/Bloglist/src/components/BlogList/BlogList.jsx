@@ -2,18 +2,12 @@ import PropTypes from 'prop-types';
 
 import Blog from '../Blog/Blog';
 
-const BlogList = ({ blogs, setBlogs, setErrorMsg, user }) => (
+const BlogList = ({ blogs, setBlogs, user }) => (
   <div>
     {blogs
       .sort((a, b) => b.likes - a.likes)
       .map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          setBlogs={setBlogs}
-          setErrorMsg={setErrorMsg}
-          user={user}
-        />
+        <Blog key={blog.id} blog={blog} setBlogs={setBlogs} user={user} />
       ))}
   </div>
 );
@@ -22,7 +16,6 @@ const BlogList = ({ blogs, setBlogs, setErrorMsg, user }) => (
 BlogList.propTypes = {
   blogs: PropTypes.arrayOf(PropTypes.object).isRequired,
   setBlogs: PropTypes.func.isRequired,
-  setErrorMsg: PropTypes.func.isRequired,
   user: PropTypes.shape({
     user: PropTypes.object.isRequired,
     token: PropTypes.string.isRequired,

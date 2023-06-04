@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 
 import blogService from '../../services/blog.service';
 import loginService from '../../services/login.service';
+
+import { showNotificationAsync } from '../../redux/notificationSlice';
+
 import logger from '../../utils/logger.util';
 
-const LoginForm = ({ setUser, setErrorMsg }) => {
+const LoginForm = ({ setUser }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,10 +30,10 @@ const LoginForm = ({ setUser, setErrorMsg }) => {
       setPassword('');
     } catch (err) {
       logger.error('Error:', err.stack);
-      setErrorMsg('Wrong credentials');
-      setTimeout(() => {
-        setErrorMsg(null);
-      }, 5000);
+
+      dispatch(
+        showNotificationAsync({ success: false, msg: 'Wrong credentials' }, 5),
+      );
     }
   };
 
@@ -63,7 +68,6 @@ const LoginForm = ({ setUser, setErrorMsg }) => {
 
 LoginForm.propTypes = {
   setUser: PropTypes.func.isRequired,
-  setErrorMsg: PropTypes.func.isRequired,
 };
 
 export default LoginForm;

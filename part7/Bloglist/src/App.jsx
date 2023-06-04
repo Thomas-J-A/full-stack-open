@@ -1,20 +1,28 @@
 import { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import BlogList from './components/BlogList/BlogList';
 import LoginForm from './components/LoginForm/LoginForm';
 import NewBlogForm from './components/NewBlogForm/NewBlogForm';
 import Toggleable from './components/Toggleable/Toggleable';
 import Notification from './components/UI/Notification/Notification';
-import Error from './components/UI/Error/Error';
 import Button from './components/UI/Button/Button';
+
+import {
+  selectNotification,
+  showNotificationAsync,
+} from './redux/notificationSlice';
+
 import blogService from './services/blog.service';
+
 import logger from './utils/logger.util';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [notificationMsg, setNotificationMsg] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+
+  const dispatch = useDispatch();
+  const notificationMsg = useSelector(selectNotification);
 
   const blogFormRef = useRef();
 
@@ -25,10 +33,13 @@ const App = () => {
         setBlogs(allBlogs);
       } catch (err) {
         logger.error('Error:', err.stack);
-        setErrorMsg('Could not fetch blogs');
-        setTimeout(() => {
-          setErrorMsg(null);
-        }, 5000);
+
+        dispatch(
+          showNotificationAsync(
+            { success: false, msg: 'Could not fetch blogs' },
+            5,
+          ),
+        );
       }
     };
 
@@ -57,17 +68,16 @@ const App = () => {
       setBlogs((prev) => [...prev, newBlog]);
       blogFormRef.current.toggleVisibility();
 
-      setNotificationMsg(`Blog added: ${newBlog.title} by ${newBlog.author}`);
-      setTimeout(() => {
-        setNotificationMsg(null);
-      }, 5000);
+      dispatch(showNotificationAsync({ success: true, msg: newBlog.title }, 5));
     } catch (err) {
       logger.error('Error:', err.stack);
 
-      setErrorMsg('Failed to create new blog');
-      setTimeout(() => {
-        setErrorMsg(null);
-      }, 5000);
+      dispatch(
+        showNotificationAsync(
+          { success: false, msg: 'Failed to create new blog' },
+          5,
+        ),
+      );
     }
   };
 
@@ -76,12 +86,11 @@ const App = () => {
       <h1>Blog List App</h1>
 
       {notificationMsg && <Notification message={notificationMsg} />}
-      {errorMsg && <Error message={errorMsg} />}
 
       {!user && (
         <div>
           <h2>Log in to app</h2>
-          <LoginForm setUser={setUser} setErrorMsg={setErrorMsg} />
+          <LoginForm setUser={setUser} />
         </div>
       )}
 
@@ -94,12 +103,7 @@ const App = () => {
             <h3>Create New Blog</h3>
             <NewBlogForm createBlog={addBlog} />
           </Toggleable>
-          <BlogList
-            blogs={blogs}
-            setBlogs={setBlogs}
-            setErrorMsg={setErrorMsg}
-            user={user}
-          />
+          <BlogList blogs={blogs} setBlogs={setBlogs} user={user} />
         </div>
       )}
     </div>
