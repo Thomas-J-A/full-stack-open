@@ -8,21 +8,21 @@ const setToken = (newToken) => {
   token = `Bearer ${newToken}`;
 };
 
-const getAll = async () => {
-  const res = await axios.get(baseUrl);
-  return res.data;
-};
+// const getAll = async () => {
+//   const res = await axios.get(baseUrl);
+//   return res.data;
+// };
 
-const create = async (newObj) => {
-  const config = {
-    headers: {
-      Authorization: token,
-    },
-  };
+// const create = async (newObj) => {
+//   const config = {
+//     headers: {
+//       Authorization: token,
+//     },
+//   };
 
-  const res = await axios.post(baseUrl, newObj, config);
-  return res.data;
-};
+//   const res = await axios.post(baseUrl, newObj, config);
+//   return res.data;
+// };
 
 const like = async (id) => {
   const res = await axios.put(`${baseUrl}/${id}`);
@@ -41,8 +41,8 @@ const remove = async (id) => {
 
 export default {
   setToken,
-  getAll,
-  create,
+  // getAll,
+  // create,
   like,
   remove,
 };

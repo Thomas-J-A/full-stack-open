@@ -1,25 +1,51 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useState, forwardRef } from 'react';
+import { useDispatch } from 'react-redux';
 
-const NewBlogForm = ({ createBlog }) => {
+import { useAddNewBlogMutation } from '../../redux/apiSlice';
+import { showNotificationAsync } from '../../redux/notificationSlice';
+
+import logger from '../../utils/logger.util';
+
+const NewBlogForm = forwardRef((props, ref) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+  const dispatch = useDispatch();
+  const [addNewBlog] = useAddNewBlogMutation();
 
   const addBlog = async (e) => {
     e.preventDefault();
 
-    const newObj = {
+    const blogData = {
       title,
       author,
       url,
     };
 
-    createBlog(newObj);
+    try {
+      await addNewBlog(blogData).unwrap();
 
-    setTitle('');
-    setAuthor('');
-    setUrl('');
+      // Hide form after successful submission
+      ref.current.toggleVisibility();
+
+      // Show success message
+      dispatch(showNotificationAsync({ success: true, msg: title }, 5));
+
+      // Clear input fields
+      setTitle('');
+      setAuthor('');
+      setUrl('');
+    } catch (err) {
+      logger.error('Error: ', err);
+
+      // Show error message
+      dispatch(
+        showNotificationAsync(
+          { success: false, msg: 'Failed to create new blog' },
+          5,
+        ),
+      );
+    }
   };
 
   return (
@@ -63,10 +89,8 @@ const NewBlogForm = ({ createBlog }) => {
       <button type="submit">Create</button>
     </form>
   );
-};
+});
 
-NewBlogForm.propTypes = {
-  createBlog: PropTypes.func.isRequired,
-};
+NewBlogForm.displayName = NewBlogForm;
 
 export default NewBlogForm;
