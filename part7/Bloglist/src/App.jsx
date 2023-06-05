@@ -12,7 +12,6 @@ import { useGetBlogsQuery } from './redux/apiSlice';
 import blogService from './services/blog.service';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
 
   const blogFormRef = useRef();
@@ -63,7 +62,7 @@ const App = () => {
             <h3>Create New Blog</h3>
             <NewBlogForm ref={blogFormRef} />
           </Toggleable>
-          <BlogList blogs={BLOGS} setBlogs={setBlogs} user={user} />
+          <BlogList blogs={BLOGS} user={user} />
         </div>
       )}
     </div>

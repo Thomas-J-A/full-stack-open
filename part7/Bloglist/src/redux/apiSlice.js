@@ -30,7 +30,26 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: [{ type: 'Blog', id: 'LIST' }],
     }),
+    likeBlog: builder.mutation({
+      query: (blogId) => ({
+        url: `/blogs/${blogId}`,
+        method: 'PUT',
+      }),
+      invalidatesTags: [{ type: 'Blog', id: 'LIST' }],
+    }),
+    removeBlog: builder.mutation({
+      query: (blogId) => ({
+        url: `/blogs/${blogId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: 'Blog', id: arg }],
+    }),
   }),
 });
 
-export const { useGetBlogsQuery, useAddNewBlogMutation } = apiSlice;
+export const {
+  useGetBlogsQuery,
+  useAddNewBlogMutation,
+  useLikeBlogMutation,
+  useRemoveBlogMutation,
+} = apiSlice;

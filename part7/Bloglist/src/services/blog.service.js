@@ -24,25 +24,25 @@ const setToken = (newToken) => {
 //   return res.data;
 // };
 
-const like = async (id) => {
-  const res = await axios.put(`${baseUrl}/${id}`);
-  return res.data;
-};
+// const like = async (id) => {
+//   const res = await axios.put(`${baseUrl}/${id}`);
+//   return res.data;
+// };
 
-const remove = async (id) => {
-  const config = {
-    headers: {
-      Authorization: token,
-    },
-  };
+// const remove = async (id) => {
+//   const config = {
+//     headers: {
+//       Authorization: token,
+//     },
+//   };
 
-  await axios.delete(`${baseUrl}/${id}`, config);
-};
+//   await axios.delete(`${baseUrl}/${id}`, config);
+// };
 
 export default {
   setToken,
   // getAll,
   // create,
-  like,
-  remove,
+  // like,
+  // remove,
 };

@@ -4,30 +4,31 @@ import { useDispatch } from 'react-redux';
 
 import Button from '../UI/Button/Button';
 
+import {
+  useLikeBlogMutation,
+  useRemoveBlogMutation,
+} from '../../redux/apiSlice';
 import { showNotificationAsync } from '../../redux/notificationSlice';
-
-import blogService from '../../services/blog.service';
 
 import logger from '../../utils/logger.util';
 
 import './Blog.css';
 
-const Blog = ({ blog, setBlogs, user }) => {
+const Blog = ({ blog, user }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const dispatch = useDispatch();
+  const [likeBlog] = useLikeBlogMutation();
+  const [removeBlog] = useRemoveBlogMutation();
 
   const toggleExpanded = () => setIsExpanded((prev) => !prev);
 
-  const likeBlog = async () => {
+  const handleLikeBlog = async () => {
     try {
-      const updatedBlog = await blogService.like(blog.id);
-
-      setBlogs((prev) =>
-        prev.map((b) => (b.id === updatedBlog.id ? updatedBlog : b)),
-      );
+      await likeBlog(blog.id).unwrap();
     } catch (err) {
       logger.error('Error:', err.stack);
 
+      // Show error message
       dispatch(
         showNotificationAsync(
           { success: false, msg: 'Failed to like blog' },
@@ -37,21 +38,18 @@ const Blog = ({ blog, setBlogs, user }) => {
     }
   };
 
-  const removeBlog = async () => {
+  const handleRemoveBlog = async () => {
+    // eslint-disable-next-line
+    const isConfirmed = confirm(`Remove blog ${blog.title} by ${blog.author}?`);
+
     try {
-      // eslint-disable-next-line
-      const isConfirmed = confirm(
-        `Remove blog ${blog.title} by ${blog.author}?`,
-      );
-
       if (isConfirmed) {
-        await blogService.remove(blog.id);
-
-        setBlogs((prev) => prev.filter((b) => b.id !== blog.id));
+        await removeBlog(blog.id).unwrap();
       }
     } catch (err) {
-      logger.error('Error:', err.stack);
+      logger.error('Error: ', err);
 
+      // Show error message
       dispatch(
         showNotificationAsync(
           { success: false, msg: 'Failed to remove blog' },
@@ -73,11 +71,11 @@ const Blog = ({ blog, setBlogs, user }) => {
           <p>{blog.url}</p>
           <p>
             {`Likes: ${blog.likes}`}
-            <Button text="Like" handleClick={likeBlog} />
+            <Button text="Like" handleClick={handleLikeBlog} />
           </p>
           <p>{blog.user.name}</p>
           {blog.user.id === user.user.id && (
-            <Button text="Remove" handleClick={removeBlog} />
+            <Button text="Remove" handleClick={handleRemoveBlog} />
           )}
         </div>
       )}
@@ -88,7 +86,6 @@ const Blog = ({ blog, setBlogs, user }) => {
 /* eslint-disable */
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  setBlogs: PropTypes.func.isRequired,
   user: PropTypes.shape({
     user: PropTypes.object.isRequired,
     token: PropTypes.string.isRequired,
