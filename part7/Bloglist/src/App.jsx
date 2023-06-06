@@ -8,7 +8,6 @@ import Toggleable from './components/Toggleable/Toggleable';
 import Notification from './components/UI/Notification/Notification';
 import Button from './components/UI/Button/Button';
 
-import { useGetBlogsQuery } from './redux/api/apiSlice';
 import {
   clearCredentials,
   selectCurrentUser,
@@ -22,15 +21,6 @@ const App = () => {
   const currentUser = useSelector(selectCurrentUser);
 
   const blogFormRef = useRef();
-
-  const { data: BLOGS = [] } = useGetBlogsQuery();
-
-  // dispatch(
-  //   showNotificationAsync(
-  //     { success: false, msg: 'Could not fetch blogs' },
-  //     5,
-  //   ),
-  // );
 
   useEffect(() => {
     const currentUserJSON = localStorage.getItem('currentUserAndToken');
@@ -72,7 +62,7 @@ const App = () => {
             <h3>Create New Blog</h3>
             <NewBlogForm ref={blogFormRef} />
           </Toggleable>
-          <BlogList blogs={BLOGS} />
+          <BlogList />
         </div>
       )}
     </div>
