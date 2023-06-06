@@ -1,22 +1,24 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Button from '../UI/Button/Button';
 
 import {
   useLikeBlogMutation,
   useRemoveBlogMutation,
-} from '../../redux/apiSlice';
-import { showNotificationAsync } from '../../redux/notificationSlice';
+} from '../../redux/api/apiSlice';
+import { selectCurrentUser } from '../../redux/features/auth/authSlice';
+import { showNotificationAsync } from '../../redux/features/notifications/notificationSlice';
 
 import logger from '../../utils/logger.util';
 
 import './Blog.css';
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const dispatch = useDispatch();
+  const currentUser = useSelector(selectCurrentUser);
   const [likeBlog] = useLikeBlogMutation();
   const [removeBlog] = useRemoveBlogMutation();
 
@@ -74,7 +76,7 @@ const Blog = ({ blog, user }) => {
             <Button text="Like" handleClick={handleLikeBlog} />
           </p>
           <p>{blog.user.name}</p>
-          {blog.user.id === user.user.id && (
+          {blog.user.id === currentUser.id && (
             <Button text="Remove" handleClick={handleRemoveBlog} />
           )}
         </div>
@@ -86,10 +88,6 @@ const Blog = ({ blog, user }) => {
 /* eslint-disable */
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  user: PropTypes.shape({
-    user: PropTypes.object.isRequired,
-    token: PropTypes.string.isRequired,
-  }).isRequired,
 };
 /* eslint-enable */
 

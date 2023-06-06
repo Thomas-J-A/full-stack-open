@@ -1,8 +1,8 @@
 import { useState, forwardRef } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { useAddNewBlogMutation } from '../../redux/apiSlice';
-import { showNotificationAsync } from '../../redux/notificationSlice';
+import { useAddNewBlogMutation } from '../../redux/api/apiSlice';
+import { showNotificationAsync } from '../../redux/features/notifications/notificationSlice';
 
 import logger from '../../utils/logger.util';
 

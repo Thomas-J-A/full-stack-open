@@ -4,11 +4,10 @@ export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:3001/api',
-    prepareHeaders: (headers) => {
-      const currentUserJSON = localStorage.getItem('currentUserAndToken');
-      if (currentUserJSON) {
-        const userAndToken = JSON.parse(currentUserJSON);
-        headers.set('Authorization', `Bearer ${userAndToken.token}`);
+    prepareHeaders: (headers, { getState }) => {
+      const { token } = getState().auth;
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
       }
       return headers;
     },
@@ -44,6 +43,13 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: (result, error, arg) => [{ type: 'Blog', id: arg }],
     }),
+    logIn: builder.mutation({
+      query: (credentials) => ({
+        url: '/login',
+        method: 'POST',
+        body: credentials,
+      }),
+    }),
   }),
 });
 
@@ -52,4 +58,5 @@ export const {
   useAddNewBlogMutation,
   useLikeBlogMutation,
   useRemoveBlogMutation,
+  useLogInMutation,
 } = apiSlice;

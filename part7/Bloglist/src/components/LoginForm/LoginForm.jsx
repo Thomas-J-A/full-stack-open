@@ -1,36 +1,34 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 
-import blogService from '../../services/blog.service';
-import loginService from '../../services/login.service';
-
-import { showNotificationAsync } from '../../redux/notificationSlice';
+import { useLogInMutation } from '../../redux/api/apiSlice';
+import { setCredentials } from '../../redux/features/auth/authSlice';
+import { showNotificationAsync } from '../../redux/features/notifications/notificationSlice';
 
 import logger from '../../utils/logger.util';
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
+  const [logIn] = useLogInMutation();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const userAndToken = await loginService.logIn({
-        username,
-        password,
-      });
+      // Log user in on server
+      const userAndToken = await logIn({ username, password }).unwrap();
 
+      // Store auth data in redux store
+      dispatch(setCredentials(userAndToken));
+
+      // Save auth data to localStorage so it can be retrieved on page refresh
       localStorage.setItem('currentUserAndToken', JSON.stringify(userAndToken));
-      blogService.setToken(userAndToken.token);
-      setUser(userAndToken);
-      setUsername('');
-      setPassword('');
     } catch (err) {
-      logger.error('Error:', err.stack);
+      logger.error('Error: ', err);
 
+      // Show error message
       dispatch(
         showNotificationAsync({ success: false, msg: 'Wrong credentials' }, 5),
       );
@@ -64,10 +62,6 @@ const LoginForm = ({ setUser }) => {
       <button type="submit">Log In</button>
     </form>
   );
-};
-
-LoginForm.propTypes = {
-  setUser: PropTypes.func.isRequired,
 };
 
 export default LoginForm;
