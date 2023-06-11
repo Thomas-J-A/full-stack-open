@@ -1,21 +1,16 @@
-const { Blog } = require('../models');
-const {
-  ForbiddenError,
-  NotFoundError,
-} = require('../lib/errors');
+const { Blog, Comment } = require('../models');
+const { ForbiddenError, NotFoundError } = require('../lib/errors');
 const { ERROR_CODES } = require('../data/constants');
 
 const fetchBloglist = async () => {
-  const blogs = await Blog
-    .find({})
+  const blogs = await Blog.find({})
     .populate('user', 'username name')
+    .populate('comments', 'content')
     .exec();
   return blogs;
 };
 
-const addEntry = async ({
-  title, author, url, likes,
-}, user) => {
+const addEntry = async ({ title, author, url, likes }, user) => {
   const blog = new Blog({
     title,
     author,
@@ -39,12 +34,11 @@ const addEntry = async ({
 };
 
 const updateLikes = async (id) => {
-  const updatedBlog = await Blog
-    .findByIdAndUpdate(
-      id,
-      { $inc: { likes: 1 } },
-      { new: true },
-    )
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    id,
+    { $inc: { likes: 1 } },
+    { new: true },
+  )
     .populate('user', 'username name')
     .exec();
 
@@ -83,11 +77,36 @@ const removeEntry = async (user, id) => {
   await user.save();
 };
 
+const addComment = async (content, blogId) => {
+  const blog = await Blog.findById(blogId).exec();
+
+  if (blog === null) {
+    throw new NotFoundError(
+      ERROR_CODES.RESOURCE_NOT_FOUND,
+      `Blog with id ${blogId} not found`,
+    );
+  }
+
+  const comment = new Comment({
+    content,
+    blogId,
+  });
+
+  const savedComment = await comment.save();
+
+  // Add commentId to corresponding blog document
+  blog.comments = [...blog.comments, savedComment._id];
+  await blog.save();
+
+  return savedComment;
+};
+
 module.exports = {
   fetchBloglist,
   addEntry,
   updateLikes,
   removeEntry,
+  addComment,
 };
 
 // throw custom errors (if predictable) and handle in controller's catch block

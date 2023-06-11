@@ -43,9 +43,22 @@ const removeEntry = async (req, res, next) => {
   }
 };
 
+const addComment = async (req, res, next) => {
+  const { content } = req.body;
+  const { id: blogId } = req.params;
+
+  try {
+    const newComment = await blogService.addComment(content, blogId);
+    res.status(201).json(newComment);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   fetchBloglist,
   addEntry,
   updateLikes,
   removeEntry,
+  addComment,
 };
