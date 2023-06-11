@@ -1,0 +1,14 @@
+.mainNav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: grey;
+  color: white;
+}
+
+.mainNav__list {
+  display: flex;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}

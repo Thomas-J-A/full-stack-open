@@ -1,34 +1,32 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
 
-import BlogList from './components/BlogList/BlogList';
 import LoginForm from './components/LoginForm/LoginForm';
-import NewBlogForm from './components/NewBlogForm/NewBlogForm';
-import Toggleable from './components/Toggleable/Toggleable';
 import Notification from './components/UI/Notification/Notification';
 import Button from './components/UI/Button/Button';
 
+import { apiSlice } from './redux/api/apiSlice';
 import {
+  setCredentials,
   clearCredentials,
   selectCurrentUser,
 } from './redux/features/auth/authSlice';
 
-// import blogService from './services/blog.service';
+import './App.css';
 
 const App = () => {
-  const [user, setUser] = useState(null);
   const dispatch = useDispatch();
   const currentUser = useSelector(selectCurrentUser);
+  const navigate = useNavigate();
 
-  const blogFormRef = useRef();
-
+  // If user has token in localStorage, log them in (when refreshing, etc)
   useEffect(() => {
     const currentUserJSON = localStorage.getItem('currentUserAndToken');
 
     if (currentUserJSON) {
       const userAndToken = JSON.parse(currentUserJSON);
-      // blogService.setToken(userAndToken.token);
-      setUser(userAndToken);
+      dispatch(setCredentials(userAndToken));
     }
   }, []);
 
@@ -38,32 +36,42 @@ const App = () => {
 
     // Remove auth data from redux store
     dispatch(clearCredentials());
+
+    // Clear entire cache
+    dispatch(apiSlice.util.resetApiState());
+
+    navigate('/');
   };
 
   return (
     <div>
-      <h1>Blog List App</h1>
-
-      <Notification />
-
       {!currentUser && (
-        <div>
+        <>
+          <h1>Blog List App</h1>
+          <Notification />
           <h2>Log in to app</h2>
           <LoginForm />
-        </div>
+        </>
       )}
 
       {currentUser && (
-        <div>
-          <h2>Blogs</h2>
-          <p>{`Logged in as ${currentUser.name}`}</p>
-          <Button text="Logout" handleClick={handleLogout} />
-          <Toggleable buttonLabel="Create New Blog" ref={blogFormRef}>
-            <h3>Create New Blog</h3>
-            <NewBlogForm ref={blogFormRef} />
-          </Toggleable>
-          <BlogList />
-        </div>
+        <>
+          <nav className="mainNav">
+            <ul className="mainNav__list">
+              <li className="mainNav__item">
+                <Link to="/">Blogs</Link>
+              </li>
+              <li>
+                <Link to="/users">Users</Link>
+              </li>
+            </ul>
+            <span>{`Logged in as ${currentUser.name}`}</span>
+            <Button text="Logout" handleClick={handleLogout} />
+          </nav>
+          <h1>Blog List App</h1>
+          <Notification />
+          <Outlet />
+        </>
       )}
     </div>
   );

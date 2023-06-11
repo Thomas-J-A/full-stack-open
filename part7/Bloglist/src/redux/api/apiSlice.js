@@ -12,7 +12,7 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Blog'],
+  tagTypes: ['Blog', 'User'],
   endpoints: (builder) => ({
     getBlogs: builder.query({
       query: () => ({ url: '/blogs' }),
@@ -27,7 +27,10 @@ export const apiSlice = createApi({
         method: 'POST',
         body: blogData,
       }),
-      invalidatesTags: [{ type: 'Blog', id: 'LIST' }],
+      invalidatesTags: [
+        { type: 'Blog', id: 'LIST' },
+        { type: 'User', id: 'LIST' },
+      ],
     }),
     likeBlog: builder.mutation({
       query: (blogId) => ({
@@ -41,7 +44,10 @@ export const apiSlice = createApi({
         url: `/blogs/${blogId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, error, arg) => [{ type: 'Blog', id: arg }],
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Blog', id: arg },
+        { type: 'User', id: 'LIST' },
+      ],
     }),
     logIn: builder.mutation({
       query: (credentials) => ({
@@ -49,6 +55,23 @@ export const apiSlice = createApi({
         method: 'POST',
         body: credentials,
       }),
+    }),
+    getUsers: builder.query({
+      query: () => ({ url: '/users' }),
+      providesTags: (result = []) => [
+        { type: 'User', id: 'LIST' },
+        ...result.map(({ id }) => ({ type: 'User', id })),
+      ],
+    }),
+    addComment: builder.mutation({
+      query: ({ blogId, commentData }) => ({
+        url: `/blogs/${blogId}/comments`,
+        method: 'POST',
+        body: commentData,
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Blog', id: arg.blogId },
+      ],
     }),
   }),
 });
@@ -59,4 +82,6 @@ export const {
   useLikeBlogMutation,
   useRemoveBlogMutation,
   useLogInMutation,
+  useGetUsersQuery,
+  useAddCommentMutation,
 } = apiSlice;
