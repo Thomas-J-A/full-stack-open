@@ -1,5 +1,7 @@
 import { useDispatch } from 'react-redux';
 
+import * as S from './BlogList.styled';
+
 import { useGetBlogsQuery } from '../../redux/api/apiSlice';
 import { showNotificationAsync } from '../../redux/features/notifications/notificationSlice';
 
@@ -25,14 +27,14 @@ const BlogList = () => {
   }
 
   return (
-    <div>
+    <S.BlogList>
       {blogs
         .slice()
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
           <Blog key={blog.id} blog={blog} />
         ))}
-    </div>
+    </S.BlogList>
   );
 };
 

@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import './Blog.css';
+import * as S from './Blog.styled';
 
 const Blog = ({ blog }) => (
-  <div className="blog">
+  <S.BlogPreview>
     <Link to={`/blogs/${blog.id}`}>{`${blog.title} | ${blog.author}`}</Link>
-  </div>
+  </S.BlogPreview>
 );
 
 /* eslint-disable */

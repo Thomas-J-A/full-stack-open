@@ -1,6 +1,8 @@
 import { useState, forwardRef } from 'react';
 import { useDispatch } from 'react-redux';
 
+import * as S from './NewBlogsForm.styled';
+
 import { useAddNewBlogMutation } from '../../redux/api/apiSlice';
 import { showNotificationAsync } from '../../redux/features/notifications/notificationSlice';
 
@@ -49,7 +51,7 @@ const NewBlogForm = forwardRef((props, ref) => {
   };
 
   return (
-    <form onSubmit={addBlog}>
+    <S.NewBlogsForm onSubmit={addBlog}>
       <div>
         <label htmlFor="title">
           Title:
@@ -87,7 +89,7 @@ const NewBlogForm = forwardRef((props, ref) => {
         </label>
       </div>
       <button type="submit">Create</button>
-    </form>
+    </S.NewBlogsForm>
   );
 });
 

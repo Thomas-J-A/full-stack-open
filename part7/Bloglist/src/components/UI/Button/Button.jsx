@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
 
+import * as S from './Button.styled';
+
 const Button = ({ text, handleClick }) => (
-  <button type="button" onClick={handleClick}>
+  <S.Button type="button" onClick={handleClick}>
     {text}
-  </button>
+  </S.Button>
 );
 
 Button.propTypes = {

@@ -1,4 +1,7 @@
 import { useParams } from 'react-router-dom';
+
+import * as S from './UserDetailsPage.styled';
+
 import { useGetUsersQuery } from '../../../redux/api/apiSlice';
 
 const UserDetailsPage = () => {
@@ -15,7 +18,7 @@ const UserDetailsPage = () => {
 
   return (
     <div>
-      <h1>{user.name}</h1>
+      <S.Username>{user.name}</S.Username>
       <h2>Blogs added:</h2>
       {blogs.length ? <ul>{blogs}</ul> : <p>None...</p>}
     </div>

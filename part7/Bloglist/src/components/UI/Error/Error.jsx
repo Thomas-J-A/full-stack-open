@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 
-import './Error.css';
+import * as S from './Error.styled';
 
-const Error = ({ message }) => <div className="error">{message}</div>;
+const Error = ({ message }) => <S.Error>{message}</S.Error>;
 
 Error.propTypes = {
   message: PropTypes.string.isRequired,

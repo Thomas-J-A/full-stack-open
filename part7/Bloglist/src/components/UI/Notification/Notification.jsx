@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 
 import { selectNotification } from '../../../redux/features/notifications/notificationSlice';
 
-import './Notification.css';
+import * as S from './Notification.styled';
 
 const Notification = () => {
   const notificationMsg = useSelector(selectNotification);
@@ -11,7 +11,7 @@ const Notification = () => {
     return null;
   }
 
-  return <div className="notification">{notificationMsg}</div>;
+  return <S.Notification>{notificationMsg}</S.Notification>;
 };
 
 export default Notification;
